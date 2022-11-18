@@ -73,18 +73,10 @@ alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r 
 alias history="fc -li"
 
 # misc
-alias please=sudo
-alias zshrc='${EDITOR:-vim} "${ZDOTDIR:-$HOME}"/.zshrc'
-alias zbench='for i in {1..10}; do /usr/bin/time zsh -lic exit; done'
-alias zdot='cd ${ZDOTDIR:-~}'
-
-# python
-alias py2='python2'
-alias py3='python3'
-alias py='python3'
-alias pip2update="pip2 list --outdated | cut -d ' ' -f1 | xargs -n1 pip2 install -U"
-alias pip3update="pip3 list --outdated | cut -d ' ' -f1 | xargs -n1 pip3 install -U"
-alias pyfind='find . -name "*.py"'
+#alias please=sudo
+#alias zshrc='${EDITOR:-vim} "${ZDOTDIR:-$HOME}"/.zshrc'
+#alias zbench='for i in {1..10}; do /usr/bin/time zsh -lic exit; done'
+#alias zdot='cd ${ZDOTDIR:-~}'
 
 # echo things
 alias print-fpath='for fp in $fpath; do echo $fp; done; unset fp'
@@ -93,7 +85,6 @@ alias print-functions='print -l ${(k)functions[(I)[^_]*]} | sort'
 
 # auto-orient images based on exif tags
 alias autorotate="jhead -autorot"
-
 
 # set initial working directory
 IWD=${IWD:-PWD}
@@ -115,49 +106,19 @@ alias pygrep='grep --include="*.py"'
 alias pyva="source .venv/bin/activate"
 
 # misc
-alias listening='netstat -anp tcp | grep "LISTEN"'
-alias rss="ps aux | sort -n -k 4"
-alias c='clear'
-alias ch='choices'
-alias please='sudo $(fc -ln -1)'
-alias t='ls -lt'
-alias b='ls -ltr'
-alias ct='cht.sh --shell'
-alias y='cht.sh '
-alias wth='sudo dmesg'
-alias q='exa -a -l --sort=modified'
-alias python='python3'
-alias m='mdcat'
 alias ee='exit'
 alias qq='reset'
-alias tt="exa -bghHliSS"
-
-
-
 alias tt="exa -bghHliSS"
 alias history="history 0"
 alias ll='ls -l'
 alias la='ls -A'
 alias l='ls -CF'
-alias qq='reset'
-alias ee='exit'
-alias listening='netstat -anp tcp | grep "LISTEN"'
-alias rss="ps aux | sort -n -k 4"
-alias c='clear'
-alias ch='choices'
-alias please='sudo $(fc -ln -1)'
 alias mv='mv -i'
 alias cp='cp -i'
-alias gg='bpytop'
 alias tre='tree -a -C'
 alias q='exa -a -l --sort=modified'
-alias sudo='sudo '
-alias t='ls -lt'
-alias b='ls -ltr'
-alias sudo='sudo '
 alias cat='/opt/homebrew/bin/bat '
 alias kit='/opt/homebrew/bin/bat --style=snip'
-
 alias listening='netstat -anp tcp | grep "LISTEN"'
 alias rss="ps aux | sort -n -k 4"
 alias c='clear'
@@ -171,7 +132,6 @@ alias y='cht.sh '
 alias wtf='sudo tail -f /var/log/syslog'
 alias wth='sudo dmesg'
 alias tre='tree -a -C'
-alias q='exa -a -l --sort=modified'
 alias python='python3'
 alias m='mdcat'
 alias fast='speedtest'
