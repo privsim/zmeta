@@ -1,0 +1,10 @@
+#
+# .gitignore
+#
+
+.DS_Store
+zsh-snap/
+cache/
+tmux/
+.zcompdump*
+.zsh_history
