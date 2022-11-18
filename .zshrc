@@ -45,8 +45,8 @@ export EDITOR=vim
 export SOPS_AGE_KEY_FILE="~/.config/sops/age/keys.txt"
 export LESS="${LESS:--g -i -M -R -S -w -z-4}"
 
-export KUBECONFIG="~/.kube/t3/config"
-export KUBECONFIG="~/.kube/sbc/config:${KUBECONFIG}"
+#export KUBECONFIG="~/.kube/t3/config"
+#export KUBECONFIG="~/.kube/sbc/config:${KUBECONFIG}"
 
 # Download Znap, if it's not there yet.
 [[ -f $ZMETA/zsh-snap/znap.zsh ]] ||
