@@ -23,7 +23,6 @@ alias -g .....='../../../..'
 alias -g ......='../../../../..'
 
 # single character shortcuts - be sparing!
-alias _=sudo
 alias d='dirs -v'
 alias l=ls
 
@@ -72,11 +71,7 @@ alias urlencode='python3 -c "import sys, urllib.parse as ul; \
 alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"
 alias history="fc -li"
 
-# misc
-#alias please=sudo
-#alias zshrc='${EDITOR:-vim} "${ZDOTDIR:-$HOME}"/.zshrc'
-#alias zbench='for i in {1..10}; do /usr/bin/time zsh -lic exit; done'
-#alias zdot='cd ${ZDOTDIR:-~}'
+alias zbench='for i in {1..10}; do /usr/bin/time zsh -lic exit; done'
 
 # echo things
 alias print-fpath='for fp in $fpath; do echo $fp; done; unset fp'
@@ -117,8 +112,6 @@ alias mv='mv -i'
 alias cp='cp -i'
 alias tre='tree -a -C'
 alias q='exa -a -l --sort=modified'
-alias cat='/opt/homebrew/bin/bat '
-alias kit='/opt/homebrew/bin/bat --style=snip'
 alias listening='netstat -anp tcp | grep "LISTEN"'
 alias rss="ps aux | sort -n -k 4"
 alias c='clear'
@@ -129,7 +122,6 @@ alias b='ls -ltr'
 alias gg='sudo bpytop'
 alias ct='cht.sh --shell'
 alias y='cht.sh '
-alias wtf='sudo tail -f /var/log/syslog'
 alias wth='sudo dmesg'
 alias tre='tree -a -C'
 alias python='python3'

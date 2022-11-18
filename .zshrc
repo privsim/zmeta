@@ -31,7 +31,6 @@ HISTSIZE=100000
 SAVEHIST=100000
 
 
-export BYOBU_PREFIX=/opt/homebrew
 export SOPS_AGE_KEY_FILE=~/.config/sops/age/keys.txt
 export EDITOR=vim
 export LANG="en_US.UTF-8"
@@ -40,9 +39,7 @@ export HISTORY_IGNORE="(ls|bg|fg|pwd|q|p|exit|cd ..|cd -|pushd|popd)"
 export ZSH_CACHE_DIR="$ZMETA/cache"
 export FIGNORE=".DS_Store"
 export GLOBIGNORE=".DS_Store"
-export EDITOR=vim
 
-export SOPS_AGE_KEY_FILE="~/.config/sops/age/keys.txt"
 export LESS="${LESS:--g -i -M -R -S -w -z-4}"
 
 #export KUBECONFIG="~/.kube/t3/config"
@@ -58,15 +55,15 @@ export LESS="${LESS:--g -i -M -R -S -w -z-4}"
 znap source privsim/OA 
 
 
-  [ -f /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
+[ -f /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
 
 
 #Enable autojump
-  [ -f /opt/homebrew/etc/profile.d/autojump.sh ] && . /opt/homebrew/etc/profile.d/autojump.sh
+[ -f /opt/homebrew/etc/profile.d/autojump.sh ] && . /opt/homebrew/etc/profile.d/autojump.sh
 
 #Enable fzf
-  [ -f /opt/homebrew/opt/fzf/shell/completion.zsh ] && . /opt/homebrew/opt/fzf/shell/completion.zsh
-  [ -f /opt/homebrew/opt/fzf/shell/key-bindings.zsh ] && . /opt/homebrew/opt/fzf/shell/key-bindings.zsh
+#[ -f /opt/homebrew/opt/fzf/shell/completion.zsh ] && . /opt/homebrew/opt/fzf/shell/completion.zsh
+#[ -f /opt/homebrew/opt/fzf/shell/key-bindings.zsh ] && . /opt/homebrew/opt/fzf/shell/key-bindings.zsh
 
 #Enable p
 [ -f $ZMETA/functions/p ] && source $ZMETA/functions/p
@@ -74,21 +71,20 @@ znap source privsim/OA
 
 
 # Load zmeta bin if it exists
-  [[ -f $ZMETA/bin ]] && source $ZMETA/bin
+[ -f $ZMETA/bin ] && source $ZMETA/bin
 
 # set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
-fi
+ [ -f "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
 
 # set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.local/bin" ] ; then
-  PATH="$HOME/.local/bin:$PATH"
-fi
+[ -f "$HOME/.local/bin" ] &&  PATH="$HOME/.local/bin:$PATH"
+
 # set PATH so it includes user's arkade bin if it exists
-if [ -d "$HOME/.arkade/bin" ] ; then
-    PATH="$HOME/.arkade/bin:$PATH"
-fi
+[ -f "$HOME/.arkade/bin" ] &&  PATH="$HOME/.arkade/bin:$PATH"
+
+# set PATH so it includes user's cargo bin if it exists
+[ -f "$HOME/.cargo/bin" ] &&  PATH="$HOME/.cargo/bin:$PATH"
+
 
 
 mkd () {
@@ -153,7 +149,7 @@ unset __conda_setup
 #export PATH="$HOME/.rbenv/bin:$PATH"
 #eval "$(rbenv init -)"
 #export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"
-#export PATH="/Users/lclose/platform-tools:$PATH"
+#export PATH="/Users/$USER/platform-tools:$PATH"
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
@@ -196,30 +192,15 @@ znap source zdharma-continuum/fast-syntax-highlighting
 znap source zsh-users/zsh-completions
 
 
-
-# ---
-
-fpath=(${ZMETA}/completions(-/FN) $fpath)
-
-
 # Load distribution-specific aliases
-if [[ -f $ZMETA/aliases-"$(uname)" ]]; then
-  source $ZMETA/aliases-"$(uname)"
-fi
+[ -f $ZMETA/aliases-"$(uname)" ] && source $ZMETA/aliases-"$(uname)"
 
 # Load *nix aliases
-source $ZMETA/aliases.zsh
-
-# ---
-
-#
-#autoload -Uz promptinit && promptinit
+[ -f $ZMETA/aliases.zsh ] && source $ZMETA/aliases.zsh
 
 
-# ---
-
-#autoload -Uz compinit && compinit
-
+znap function _kubectl kubectl           'eval "$( kubectl completion zsh)"'
+compctl -K    _kubectl kubectl
 
 znap function _pyenv pyenv              'eval "$( pyenv init - --no-rehash )"'
 compctl -K    _pyenv pyenv
@@ -234,7 +215,5 @@ complete -o nospace -o default -o bashdefault \
 znap function _pipenv pipenv            'eval "$( pipenv --completion )"'
 compdef       _pipenv pipenv
 
-
-if [[ -f "${ZMETA}/ascii/ducky.txt"  ]]; then
-    neofetch --source "${ZMETA}/ascii/ducky.txt" -L
-fi
+# If we gotta duck, lets get it out of the way first thing
+[ -f "${ZMETA}/ascii/ducky.txt"  ] && neofetch --source "${ZMETA}/ascii/ducky.txt" -L
