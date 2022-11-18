@@ -4,7 +4,8 @@
 
 .DS_Store
 zsh-snap/
-cache/
+cache/brew*
+cache/completions/*
 tmux/
 .zcompdump*
 .zsh_history

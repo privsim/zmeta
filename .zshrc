@@ -61,9 +61,6 @@ znap source privsim/OA
 #Enable autojump
 [ -f /opt/homebrew/etc/profile.d/autojump.sh ] && . /opt/homebrew/etc/profile.d/autojump.sh
 
-#Enable fzf
-#[ -f /opt/homebrew/opt/fzf/shell/completion.zsh ] && . /opt/homebrew/opt/fzf/shell/completion.zsh
-#[ -f /opt/homebrew/opt/fzf/shell/key-bindings.zsh ] && . /opt/homebrew/opt/fzf/shell/key-bindings.zsh
 
 #Enable p
 [ -f $ZMETA/functions/p ] && source $ZMETA/functions/p
@@ -71,7 +68,7 @@ znap source privsim/OA
 
 
 # Load zmeta bin if it exists
-[ -f $ZMETA/bin ] && source $ZMETA/bin
+[ -f $ZMETA/bin ] && PATH="$ZMETA/bin:$PATH"
 
 # set PATH so it includes user's private bin if it exists
  [ -f "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
