@@ -68,6 +68,11 @@ znap source privsim/OA
   [ -f /opt/homebrew/opt/fzf/shell/completion.zsh ] && . /opt/homebrew/opt/fzf/shell/completion.zsh
   [ -f /opt/homebrew/opt/fzf/shell/key-bindings.zsh ] && . /opt/homebrew/opt/fzf/shell/key-bindings.zsh
 
+#Enable p
+[ -f $ZMETA/functions/p ] && source $ZMETA/functions/p
+
+
+
 # Load zmeta bin if it exists
   [[ -f $ZMETA/bin ]] && source $ZMETA/bin
 
@@ -159,7 +164,7 @@ ZSH_AUTOSUGGEST_STRATEGY=( history )
 znap source zsh-users/zsh-autosuggestions
 
 ZSH_HIGHLIGHT_HIGHLIGHTERS=( main brackets )
-znap source zsh-users/zsh-syntax-highlighting
+# znap source zsh-users/zsh-syntax-highlighting
 znap source zsh-users/zsh-history-substring-search
 
 
