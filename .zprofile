@@ -31,7 +31,7 @@ typeset -gU cdpath fpath mailpath path
 path=(
   $HOME/{,s}bin(N)
   $ZDOTDIR/bin(N)
-  $ZMETA/bin(N)
+  $HOME/.zmeta/bin(N)
   $HOME/.local/{,s}bin(N)
   /opt/{homebrew,local}/{,s}bin(N)
   /usr/local/{,s}bin(N)
