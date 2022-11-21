@@ -33,11 +33,7 @@ export ZDOTDIR=$HOME/.zmeta
 # set the list of directories that zsh searches for commands
 path=(
   $HOME/{,s}bin(N)
-  $ZDOTDIR/bin(N)
-  $HOME/.zmeta/bin(N)
   $HOME/.local/{,s}bin(N)
-  $HOME/.cargo/bin(N)
-  $HOME/.arkade/bin(N)
   /opt/{homebrew,local}/{,s}bin(N)
   /usr/local/{,s}bin(N)
   $path
