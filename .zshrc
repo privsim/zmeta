@@ -68,21 +68,22 @@ znap source privsim/OA
 
 
 # Load zmeta bin if it exists
-[ -f $ZMETA/bin ] && PATH="$ZMETA/bin:$PATH"
+[ -f $ZMETA/bin ] && path+=("$ZMETA/bin")
 
 # set PATH so it includes user's private bin if it exists
- [ -f "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
+[ -f "$HOME/bin" ] && path+=("$HOME/bin")
 
 # set PATH so it includes user's private bin if it exists
-[ -f "$HOME/.local/bin" ] &&  PATH="$HOME/.local/bin:$PATH"
+[ -f "$HOME/.local/bin" ] &&  path+=("$HOME/.local/bin")
 
 # set PATH so it includes user's arkade bin if it exists
-[ -f "$HOME/.arkade/bin" ] &&  PATH="$HOME/.arkade/bin:$PATH"
+[ -f "$HOME/.arkade/bin" ] &&  path+=("$HOME/.arkade/bin")
 
 # set PATH so it includes user's cargo bin if it exists
-[ -f "$HOME/.cargo/bin" ] &&  PATH="$HOME/.cargo/bin:$PATH"
+[ -f "$HOME/.cargo/bin" ] &&  path+=("$HOME/.cargo/bin")
 
 
+export PATH
 
 mkd () {
     mkdir -p "$@" && cd "$@"
