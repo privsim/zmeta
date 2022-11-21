@@ -50,46 +50,22 @@ export LESS="${LESS:--g -i -M -R -S -w -z-4}"
     git clone --depth 1 -- \
         https://github.com/marlonrichert/zsh-snap.git $ZMETA/zsh-snap
 
-
-
 znap source privsim/OA 
 
-
 [ -f /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
-
 
 #Enable autojump
 [ -f /opt/homebrew/etc/profile.d/autojump.sh ] && . /opt/homebrew/etc/profile.d/autojump.sh
 
-
 #Enable p
 [ -f $ZMETA/functions/p ] && source $ZMETA/functions/p
-
-
-
-# Load zmeta bin if it exists
-[ -f $ZMETA/bin ] && path+=("$ZMETA/bin")
-
-# set PATH so it includes user's private bin if it exists
-[ -f "$HOME/bin" ] && path+=("$HOME/bin")
-
-# set PATH so it includes user's private bin if it exists
-[ -f "$HOME/.local/bin" ] &&  path+=("$HOME/.local/bin")
-
-# set PATH so it includes user's arkade bin if it exists
-[ -f "$HOME/.arkade/bin" ] &&  path+=("$HOME/.arkade/bin")
-
-# set PATH so it includes user's cargo bin if it exists
-[ -f "$HOME/.cargo/bin" ] &&  path+=("$HOME/.cargo/bin")
-
-
-export PATH
 
 mkd () {
     mkdir -p "$@" && cd "$@"
 }
 
-batdiff() {
+batdiff() 
+{
     git diff --name-only --diff-filter=d | xargs bat --diff
 }
 

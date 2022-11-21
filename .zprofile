@@ -22,6 +22,9 @@ export LC_ALL="${LC_ALL:-en_US.UTF-8}"
 # ensure path arrays do not contain duplicates
 typeset -gU cdpath fpath mailpath path
 
+### zdotdir
+export ZDOTDIR=$HOME/.zmeta
+
 # set the list of directories that `cd` searches
 # cdpath=(
 #   $cdpath
@@ -33,6 +36,8 @@ path=(
   $ZDOTDIR/bin(N)
   $HOME/.zmeta/bin(N)
   $HOME/.local/{,s}bin(N)
+  $HOME/.cargo/bin(N)
+  $HOME/.arkade/bin(N)
   /opt/{homebrew,local}/{,s}bin(N)
   /usr/local/{,s}bin(N)
   $path
