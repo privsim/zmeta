@@ -24,7 +24,11 @@ alias -g ......='../../../../..'
 
 # single character shortcuts - be sparing!
 alias d='dirs -v'
-alias l=ls
+alias l="ls -ltrhsa"
+alias ls="ls -lha"
+
+alias ea="cat /proc/sys/kernel/random/entropy_avail"
+
 
 # mask built-ins with better defaults
 # alias cp='cp -i'
