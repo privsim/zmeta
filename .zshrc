@@ -34,7 +34,6 @@ setopt histignorealldups
 setopt histignorespace
 setopt histreduceblanks
 setopt listtypes
-setopt nobeep
 setopt nocaseglob
 setopt noclobber
 setopt nullglob
@@ -60,8 +59,8 @@ KEYTIMEOUT=1
 bindkey -v
 
 HISTFILE=~/.zsh_history
-HISTSIZE=100000
-SAVEHIST=100000
+HISTSIZE=40000
+SAVEHIST=30
 
 
 export SOPS_AGE_KEY_FILE=~/.config/sops/age/keys.txt
