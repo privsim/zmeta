@@ -23,33 +23,18 @@ unsetopt HUP                         # Don't kill jobs on shell exit.
 unsetopt CHECK_JOBS                  # Don't report on jobs when shell exit.
 unsetopt beep nomatch                # Don't beep on failed completion.
 
-setopt alwaystoend
-setopt autocd
-setopt autopushd
-setopt completeinword
-setopt correct
-setopt extendedglob
-setopt extendedhistory
-setopt histignorealldups
-setopt histignorespace
-setopt histreduceblanks
-setopt listtypes
-setopt nocaseglob
-setopt noclobber
-setopt nullglob
-
-zstyle ":completion:*" auto-description "specify %d"
-zstyle ":completion:*" cache-path "${HOME}/.zmeta/.zsh_cache"
-zstyle ":completion:*" completer _expand _complete _correct _approximate
-zstyle ":completion:*" file-sort modification reverse
-zstyle ":completion:*" format "completing %d"
-zstyle ":completion:*" group-name ""
-zstyle ":completion:*" hosts off
-zstyle ":completion:*" list-colors "=(#b) #([0-9]#)*=36=31"
-zstyle ":completion:*" menu select=long-list select=0
-zstyle ":completion:*" use-cache on
-zstyle ":completion:*" verbose yes
-zstyle ":completion:*:kill:*" command "ps -u ${USER} -o pid,%cpu,tty,cputime,cmd"
+#zstyle ":completion:*" auto-description "specify %d"
+#zstyle ":completion:*" cache-path "${HOME}/.zmeta/.zsh_cache"
+#zstyle ":completion:*" completer _expand _complete _correct _approximate
+#zstyle ":completion:*" file-sort modification reverse
+#zstyle ":completion:*" format "completing %d"
+#zstyle ":completion:*" group-name ""
+#zstyle ":completion:*" hosts off
+#zstyle ":completion:*" list-colors "=(#b) #([0-9]#)*=36=31"
+#zstyle ":completion:*" menu select=long-list select=0
+#zstyle ":completion:*" use-cache on
+#zstyle ":completion:*" verbose yes
+#zstyle ":completion:*:kill:*" command "ps -u ${USER} -o pid,%cpu,tty,cputime,cmd"
 
 
 # Set any environment variables or keybindings related to your plugins or session.
@@ -59,8 +44,7 @@ KEYTIMEOUT=1
 bindkey -v
 
 HISTFILE=~/.zsh_history
-HISTSIZE=40000
-SAVEHIST=30
+HISTSIZE=10000
 
 
 export SOPS_AGE_KEY_FILE=~/.config/sops/age/keys.txt
