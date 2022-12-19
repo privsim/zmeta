@@ -50,7 +50,7 @@ HISTSIZE=10000
 export SOPS_AGE_KEY_FILE=~/.config/sops/age/keys.txt
 export EDITOR=vim
 export LANG="en_US.UTF-8"
-export HISTORY_IGNORE="(ls|bg|fg|pwd|q|p|exit|cd ..|cd -|pushd|popd)"
+#export HISTORY_IGNORE="(ls|bg|fg|pwd|q|p|exit|cd ..|cd -|pushd|popd)"
 
 export ZSH_CACHE_DIR="$ZMETA/cache"
 export FIGNORE=".DS_Store"
@@ -281,15 +281,15 @@ function upload {
 function vpn {
   ssh -C -N -L 5555:127.0.0.1:8118 vpn }
 
-function zshaddhistory {
-  whence "${${(z)1}[1]}" >| /dev/null || return 1
-  local line cmd
-  line=${1%%$'\n'}
-  cmd=${line%% *}
-  [[ ${#line} -ge 5 \
-    && ${cmd} != (apm|apt-cache|base64|bzip2|cal|calc|cat|cd|chmod|convert|cp|curl|cvs|date|df|dig|disklabel|dmesg|doas|download|du|e|egrep|enc|ent|exiftool|f|fdisk|feh|ffplay|file|find|firejail|gimp|git|gpg|grep|hdiutil|head|hostname|ifconfig|kill|less|libreoffice|lp|ls|mail|make|man|mkdir|mnt|mount|mpv|mv|nc|openssl|patch|pdf|pdfinfo|pgrep|ping|pkg_info|pkill|ps|pylint|rcctl|rm|rsync|scp|scrot|set|sha256|secret|sort|srm|ssh|ssh-keygen|startx|stat|strip|sudo|sysctl|tar|tmux|top|umount|uname|unzip|upload|uptime|useradd|vlc|vi|vim|wc|wget|which|whoami|whois|wireshark|xclip|xxd|youtube-dl|ykman|yt|./pwd.sh|./purse.sh)
-  ]]
-}
+#function zshaddhistory {
+#  whence "${${(z)1}[1]}" >| /dev/null || return 1
+#  local line cmd
+#  line=${1%%$'\n'}
+#  cmd=${line%% *}
+#  [[ ${#line} -ge 5 \
+#    && ${cmd} != (apm|apt-cache|base64|bzip2|cal|calc|cat|cd|chmod|convert|cp|curl|cvs|date|df|dig|disklabel|dmesg|doas|download|du|e|egrep|enc|ent|exiftool|f|fdisk|feh|ffplay|file|find|firejail|gimp|git|gpg|grep|hdiutil|head|hostname|ifconfig|kill|less|libreoffice|lp|ls|mail|make|man|mkdir|mnt|mount|mpv|mv|nc|openssl|patch|pdf|pdfinfo|pgrep|ping|pkg_info|pkill|ps|pylint|rcctl|rm|rsync|scp|scrot|set|sha256|secret|sort|srm|ssh|ssh-keygen|startx|stat|strip|sudo|sysctl|tar|tmux|top|umount|uname|unzip|upload|uptime|useradd|vlc|vi|vim|wc|wget|which|whoami|whois|wireshark|xclip|xxd|youtube-dl|ykman|yt|./pwd.sh|./purse.sh)
+#  ]]
+#}
 
 
 
@@ -298,16 +298,6 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 
 znap source marlonrichert/zsh-hist
 
-
-ZSH_AUTOSUGGEST_STRATEGY=( history )
-znap source zsh-users/zsh-autosuggestions
-
-ZSH_HIGHLIGHT_HIGHLIGHTERS=( main brackets )
-# znap source zsh-users/zsh-syntax-highlighting
-znap source zsh-users/zsh-history-substring-search
-
-
-
 ##
 # Load your plugins with `znap source`.
 #
@@ -315,14 +305,13 @@ znap source zsh-users/zsh-history-substring-search
 znap source marlonrichert/zsh-edit
 
 # ...or to load only those parts of Oh-My-Zsh or Prezto that you really need:
-znap source sorin-ionescu/prezto modules/{environment,history}
+#znap source sorin-ionescu/prezto modules/{environment,history}
 
 znap source ohmyzsh/ohmyzsh plugins/git
 znap source ohmyzsh/ohmyzsh plugins/command-not-found
 znap source ohmyzsh/ohmyzsh plugins/docker
 znap source ohmyzsh/ohmyzsh plugins/docker-compose
 znap source ohmyzsh/ohmyzsh plugins/kubectl
-znap source ohmyzsh/ohmyzsh plugins/magic-enter
 znap source ohmyzsh/ohmyzsh plugins/kubectx
 znap source ohmyzsh/ohmyzsh plugins/terraform
 znap source ohmyzsh/ohmyzsh plugins/ansible
@@ -332,8 +321,12 @@ znap source ohmyzsh/ohmyzsh lib/correction.zsh
 znap source ohmyzsh/ohmyzsh lib/clipboard.zsh
 
 znap source zdharma-continuum/fast-syntax-highlighting
-znap source zsh-users/zsh-completions
 
+
+znap source zsh-users/zsh-completions
+znap source zsh-users/zsh-autosuggestions
+znap source zsh-users/zsh-history-substring-search
+znap source zsh-users/zsh-syntax-highlighting
 
 # Load distribution-specific aliases
 [ -f $ZMETA/aliases-"$(uname)" ] && source $ZMETA/aliases-"$(uname)"
@@ -364,3 +357,4 @@ compdef       _pipenv pipenv
 #export GPG_TTY="$(tty)"
 #export SSH_AUTH_SOCK="/run/user/$UID/gnupg/S.gpg-agent.ssh"
 #gpg-connect-agent updatestartuptty /bye > /dev/null
+
