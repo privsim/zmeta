@@ -319,6 +319,7 @@ znap source ohmyzsh/ohmyzsh plugins/virtualenv
 znap source ohmyzsh/ohmyzsh lib/completion.zsh
 znap source ohmyzsh/ohmyzsh lib/correction.zsh
 znap source ohmyzsh/ohmyzsh lib/clipboard.zsh
+znap source ohmyzsh/ohmyzsh lib/history.zsh
 
 znap source zdharma-continuum/fast-syntax-highlighting
 
