@@ -359,3 +359,6 @@ compdef       _pipenv pipenv
 #export SSH_AUTH_SOCK="/run/user/$UID/gnupg/S.gpg-agent.ssh"
 #gpg-connect-agent updatestartuptty /bye > /dev/null
 
+fpath=(~/.zmeta/cache/completions $fpath)
+autoload -Uz compinit
+compinit
