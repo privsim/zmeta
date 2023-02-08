@@ -36,6 +36,31 @@ unsetopt beep nomatch                # Don't beep on failed completion.
 #zstyle ":completion:*" verbose yes
 #zstyle ":completion:*:kill:*" command "ps -u ${USER} -o pid,%cpu,tty,cputime,cmd"
 
+setopt autocd
+setopt clobber
+setopt complete_aliases
+setopt correct_all
+setopt extended_glob
+setopt interactive_comments
+setopt nonomatch
+setopt pushd_ignore_dups
+
+DISABLE_MAGIC_FUNCTIONS=true
+
+# ZSH History Options
+HISTSIZE=50000
+SAVEHIST=50000
+HISTFILE=${HISTFILE:-$HOME/.zsh_history}
+setopt appendhistory
+setopt hist_expire_dups_first
+setopt hist_find_no_dups
+setopt hist_ignore_all_dups
+setopt hist_ignore_space
+setopt hist_save_no_dups
+setopt inc_append_history
+
+
+
 
 # Set any environment variables or keybindings related to your plugins or session.
 SHELL_SESSIONS_DISABLE=1
@@ -50,16 +75,13 @@ HISTSIZE=10000
 export SOPS_AGE_KEY_FILE=~/.config/sops/age/keys.txt
 export EDITOR=vim
 export LANG="en_US.UTF-8"
-#export HISTORY_IGNORE="(ls|bg|fg|pwd|q|p|exit|cd ..|cd -|pushd|popd)"
-
+export HISTORY_IGNORE="(ls|bg|fg|pwd|exit|cd ..)"
 export ZSH_CACHE_DIR="$ZMETA/cache"
 export FIGNORE=".DS_Store"
 export GLOBIGNORE=".DS_Store"
 
 export LESS="${LESS:--g -i -M -R -S -w -z-4}"
 
-#export KUBECONFIG="~/.kube/t3/config"
-#export KUBECONFIG="~/.kube/sbc/config:${KUBECONFIG}"
 
 # Download Znap, if it's not there yet.
 [[ -f $ZMETA/zsh-snap/znap.zsh ]] ||
@@ -359,6 +381,12 @@ compdef       _pipenv pipenv
 #export SSH_AUTH_SOCK="/run/user/$UID/gnupg/S.gpg-agent.ssh"
 #gpg-connect-agent updatestartuptty /bye > /dev/null
 
-fpath=(~/.zmeta/cache/completions $fpath)
+
+if [[ "$OSTYPE" != darwin* ]]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
+
+fpath+=(~/.zmeta/cache/completions:$fpath)
 autoload -Uz compinit
 compinit
