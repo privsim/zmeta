@@ -36,28 +36,27 @@ unsetopt beep nomatch                # Don't beep on failed completion.
 #zstyle ":completion:*" verbose yes
 #zstyle ":completion:*:kill:*" command "ps -u ${USER} -o pid,%cpu,tty,cputime,cmd"
 
-setopt autocd
-setopt clobber
-setopt complete_aliases
-setopt correct_all
-setopt extended_glob
-setopt interactive_comments
-setopt nonomatch
-setopt pushd_ignore_dups
-
-DISABLE_MAGIC_FUNCTIONS=true
-
+#setopt autocd
+#setopt clobber
+#setopt complete_aliases
+#setopt extended_glob
+#setopt interactive_comments
+#setopt nonomatch
+#setopt pushd_ignore_dups
+#
+#DISABLE_MAGIC_FUNCTIONS=true
+#
 # ZSH History Options
 HISTSIZE=50000
 SAVEHIST=50000
 HISTFILE=${HISTFILE:-$HOME/.zsh_history}
-setopt appendhistory
-setopt hist_expire_dups_first
-setopt hist_find_no_dups
-setopt hist_ignore_all_dups
-setopt hist_ignore_space
-setopt hist_save_no_dups
-setopt inc_append_history
+#setopt appendhistory
+#setopt hist_expire_dups_first
+#setopt hist_find_no_dups
+#setopt hist_ignore_all_dups
+#setopt hist_ignore_space
+#setopt hist_save_no_dups
+#setopt inc_append_history
 
 
 
@@ -67,9 +66,6 @@ SHELL_SESSIONS_DISABLE=1
 KEYTIMEOUT=1
 
 bindkey -v
-
-HISTFILE=~/.zsh_history
-HISTSIZE=10000
 
 
 export SOPS_AGE_KEY_FILE=~/.config/sops/age/keys.txt
@@ -387,6 +383,6 @@ if [[ "$OSTYPE" != darwin* ]]; then
 fi
 
 
-fpath+=(~/.zmeta/cache/completions:$fpath)
+#fpath+=(~/.zmeta/cache/completions:$fpath)
 autoload -Uz compinit
 compinit
