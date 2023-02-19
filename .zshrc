@@ -379,7 +379,7 @@ compdef       _pipenv pipenv
 
 
 if [[ "$OSTYPE" != darwin* ]]; then
-  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  [ -f /home/linuxbrew/.linuxbrew/bin/brew ] &&  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
 
