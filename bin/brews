@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#!/usr/bin/env -S bash -e
+
+
+
+brew install zsh zsh-async zsh-autocomplete zsh-autopair zsh-autosuggestions zsh-completions zsh-fast-syntax-highlighting zsh-history-substring-search zsh-vi-mode  zsh-you-should-use zsh bat xsel tree neofetch autojump tldr vim wget git bpytop exa htop

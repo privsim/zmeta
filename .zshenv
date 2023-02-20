@@ -14,3 +14,10 @@ export XDG_CACHE_HOME=~/.cache
 export XDG_DATA_HOME=~/.local/share
 export XDG_RUNTIME_DIR=~/.xdg
 
+
+if [ -e /etc/os-release ]; then
+  if [  grep -qi "ubuntu" /etc/os-release ]; then
+    skip_global_compinit=1
+  fi
+fi
+

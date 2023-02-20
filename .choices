@@ -77,3 +77,7 @@ znap fpath _rustup  'rustup  completions zsh'
 znap fpath _cargo   'rustup  completions zsh cargo'
 
 git clone https://github.com/tmux-plugins/tpm $ZMETA/tmux/plugins/tpm
+
+
+alias k=kubectl
+source <(kubectl completion bash | sed 's/kubectl/k/g')

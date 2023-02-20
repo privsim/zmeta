@@ -1,0 +1,176 @@
+mkd () {
+    mkdir -p "$@" && cd "$@"
+}
+
+batdiff() 
+{
+    git diff --name-only --diff-filter=d | xargs bat --diff
+}
+
+hist()
+{
+        [[ -z ${1} ]] && echo "No arguments given"
+        history 1 | grep ${1}
+}
+
+# Easier extraction of compressed files
+ex () {
+       if [ -f $1 ] ; then
+           case $1 in
+               *.tar.bz2)   tar xvjf $1    ;;
+               *.tar.gz)    tar xvzf $1    ;;
+               *.tar.xz)    tar xvJf $1    ;;
+               *.bz2)       bunzip2 $1     ;;
+               *.rar)       unrar x $1     ;;
+               *.gz)        gunzip $1      ;;
+               *.tar)       tar xvf $1     ;;
+               *.tbz2)      tar xvjf $1    ;;
+               *.tgz)       tar xvzf $1    ;;
+               *.zip)       unzip $1       ;;
+               *.Z)         uncompress $1  ;;
+               *.7z)        7z x $1        ;;
+               *.xz)        unxz $1        ;;
+               *.exe)       cabextract $1  ;;
+               *)           echo "\`$1': unrecognized file compression" ;;
+           esac
+       else
+           echo "\`$1' is not a valid file"
+       fi
+    }
+
+function convert_secs {
+  ((h=${1}/3600)) ; ((m=(${1}%3600)/60)) ; ((s=${1}%60))
+  printf "%02d:%02d:%02d\n" ${h} ${m} ${s} }
+
+function dump_arp {
+  ${ROOT} tcpdump -eni ${NETWORK} -w arp-${NOW}.pcap \
+    "ether proto 0x0806" }
+
+function dump_icmp {
+  ${ROOT} tcpdump -ni ${NETWORK} -w icmp-${NOW}.pcap \
+    "icmp" }
+
+function dump_pflog {
+  ${ROOT} tcpdump -ni pflog0 -w pflog-${NOW}.pcap \
+    "not icmp6 and not host ff02::16 and not host ff02::d" }
+
+function dump_syn {
+  ${ROOT} tcpdump -ni ${NETWORK} -w syn-${NOW}.pcap \
+    "tcp[13] & 2 != 0" }
+
+function dump_udp {
+  ${ROOT} tcpdump -ni ${NETWORK} -w udp-${NOW}.pcap \
+    "udp and not port 443" }
+
+function dump_dns {
+  tshark -Y "dns.flags.response == 1" -Tfields \
+    -e frame.time_delta -e dns.qry.name -e dns.a \
+      -Eseparator=, }
+
+function dump_http {
+  tshark -Y "http.request or http.response" -Tfields \
+    -e ip.dst -e http.request.full_uri -e http.request.method \
+      -e http.response.code -e http.response.phrase \
+        -Eseparator=, }
+
+function dump_ssl {
+  tshark -Y "ssl.handshake.certificate" -Tfields \
+    -e ip.src -e x509sat.uTF8String -e x509sat.printableString \
+      -e x509sat.universalString -e x509sat.IA5String \
+        -e x509sat.teletexString \
+          -Eseparator=, }
+
+function e {  # appx bits of entropy: e <chars> <length>
+  awk -v c=${1} -v l=${2} "BEGIN { print log(c^l)/log(2) }" }
+
+function f {
+  find . -iname "*${1}*" }
+
+function fd {
+  find . -iname "*${1}*" -type d }
+
+function gas {  # get CIDRs for AS number
+  whois -h whois.radb.net '!g'${1} }
+
+function myip {
+  curl -sq "https://icanhazip.com/" }
+
+function pdf {
+  mupdf -r 180 -C FDF6E3 "${1}" }
+
+function png2jpg {
+  for png in $(find . -type f -name "*.png") ; do
+    image="${png%.*}"
+    convert "${image}.png" "${image}.jpg" ; done }
+
+function nonlocal () {
+  egrep -ve "^#|^255.255.255.255|^127.|^0.|^::1|^ff..::|^fe80::" "${1}" | \
+    egrep -e "[1,2]|::"
+}
+
+function rand {
+  for item in '01' \
+    '[:digit:]' '[:upper:]' \
+    '[:xdigit:]' '[:alnum:]' '[:graph:]' ; do \
+      tr -dc "${item}" < /dev/urandom | \
+      fold -w 80 | head -n 3 | \
+      sed "-es/./ /"{1..80..20} ; done }
+
+function rand_mac {
+  openssl rand -hex 6 | sed "s/\(..\)/\1:/g; s/.$//" }
+
+function resize_ff {
+  xdotool windowsize \
+    $(xdotool search --name firefox | tail -n1) 1366 768 }
+
+function reveal {
+  output=$(echo "${1}" | rev | cut -c16- | rev)
+  gpg --decrypt --output ${output} "${1}" \
+    && echo "${1} -> ${output}" }
+
+function rs {
+  rsync --verbose --archive --human-readable \
+    --progress --stats --ipv4 --compress \
+    --log-file=$(mktemp) "${@}" }
+
+function secret {  # list preferred id last
+  output="${HOME}/$(basename ${1}).$(date +%F).enc"
+  gpg --encrypt --armor \
+    --output ${output} \
+    -r 0xFF3E7D88647EBCDB \
+    -r github@duh.to \
+    "${1}" && echo "${1} -> ${output}" }
+
+function secret () {
+        output=~/"${1}".$(date +%s).enc
+        gpg --encrypt --armor --output ${output} -r 0x0000 -r 0x0001 -r 0x0002 "${1}" && echo "${1} -> ${output}"
+}
+
+function reveal () {
+        output=$(echo "${1}" | rev | cut -c16- | rev)
+        gpg --decrypt --output ${output} "${1}" && echo "${1} -> ${output}"
+}
+
+function srl {
+  doas cu -r -s 115200 -l cuaU0 2>/dev/null || \
+    sudo minicom -D /dev/ttyUSB0 2>/dev/null || \
+      printf "disconnected\n" }
+
+function top_history {
+  history 1 | awk '{CMD[$2]++;count++;}END {
+    for (a in CMD)print CMD[a] " " CMD[a]/count*100 "% " a;}' | \
+      column -c3 -s " " -t | sort -nr | nl |  head -n25 }
+
+function download () {
+  curl -O ${DOWNLOAD}/"${@}" }
+
+function upload {
+   curl -sq -F "file=@${@}" ${UPLOAD} | \
+     grep -q "Saved" && printf "Uploaded ${@}\n" }
+
+function vpn {
+  ssh -C -N -L 5555:127.0.0.1:8118 vpn }
+
+
+
+
