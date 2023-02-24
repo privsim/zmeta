@@ -94,6 +94,10 @@ znap source privsim/OA
 #Enable p
 [ -f $ZMETA/functions/p ] && source $ZMETA/functions/p
 
+#Enable various
+[ -f $ZMETA/functions/various ] && source $ZMETA/functions/various
+
+
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ]; then
   PATH="$HOME/bin:$PATH"
@@ -173,6 +177,9 @@ compdef _pipenv pipenv
 # linuxbrew zsh-history-substring-search
 [ -f /home/linuxbrew/.linuxbrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh ] && source /home/linuxbrew/.linuxbrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh
 
+# linuxbrew zsh-syntax-highlighting
+[ -f /home/linuxbrew/.linuxbrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /home/linuxbrew/.linuxbrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
 # brew zsh-vi-mode
 [ -f /opt/homebrew/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh ] && source /opt/homebrew/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 
@@ -188,10 +195,15 @@ compdef _pipenv pipenv
 # brew zsh-history-substring-search
 [ -f /opt/homebrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh ] && source /opt/homebrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh
 
+# brew zsh-syntax-highlighting
+[ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] &&  source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
 #fpath+=(~/.zmeta/cache/completions:$fpath)
 if [[ $OSTYPE == darwin ]]; then
   autoload -U compinit && compinit
 fi
+
+[ -f /Users/$USER/.docker/init-zsh.sh ] && source /Users/$USER/.docker/init-zsh.sh || true 
 
 #export GPG_TTY="$(tty)"
 #export SSH_AUTH_SOCK="/run/user/$UID/gnupg/S.gpg-agent.ssh"
