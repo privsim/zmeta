@@ -13,8 +13,8 @@ if [[ $OSTYPE == darwin ]]; then
 fi
 
 # linuxbrew zsh-autocomplete
-[[ -f /home/linuxbrew/.linuxbrew/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh ]] &&
-  source /home/linuxbrew/.linuxbrew/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+#[[ -f /home/linuxbrew/.linuxbrew/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh ]] &&
+#  source /home/linuxbrew/.linuxbrew/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 
 zstyle ':znap:*' repos-dir ~/.zmeta/zsh-snap/repos
 source $ZMETA/zsh-snap/znap.zsh
@@ -205,8 +205,6 @@ compdef _pipenv pipenv
 # brew zsh-syntax-highlighting
 [ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] &&  source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-# linuxbrew zsh-syntax-highlighting
-[ -f /home/linuxbrew/.linuxbrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /home/linuxbrew/.linuxbrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 #fpath+=(~/.zmeta/cache/completions:$fpath)
 #if [[ $OSTYPE == darwin ]]; then
@@ -220,5 +218,6 @@ compdef _pipenv pipenv
 #gpg-connect-agent updatestartuptty /bye > /dev/null
 export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 
-autoload -Uz compinit
+autoload -Uz compinit bashcompinit
 compinit
+bashcompinit
