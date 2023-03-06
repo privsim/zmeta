@@ -3,44 +3,44 @@
 #
 
 # suffix aliases (ie: `cd ..4`)
-alias -g H='| head'
-alias -g T='| tail'
-alias -g G='| grep -E'
-alias -g S='| sort'
-alias -g L='| less'
-alias -g M='| more'
-alias -g ..2='../..'
-alias -g ..3='../../..'
-alias -g ..4='../../../..'
-alias -g ..5='../../../../..'
-alias -g ..6='../../../../../..'
-alias -g ..7='../../../../../../..'
-alias -g ..8='../../../../../../../..'
-alias -g ..9='../../../../../../../../..'
-alias -g ...='../..'
-alias -g ....='../../..'
-alias -g .....='../../../..'
-alias -g ......='../../../../..'
-
-# single character shortcuts - be sparing!
-alias d='dirs -v'
-alias l="ls -ltrhsa"
-alias ls="ls -lha"
+#alias -g H='| head'
+#alias -g T='| tail'
+#alias -g G='| grep -E'
+#alias -g S='| sort'
+#alias -g L='| less'
+#alias -g M='| more'
+#alias -g ..2='../..'
+#alias -g ..3='../../..'
+#alias -g ..4='../../../..'
+#alias -g ..5='../../../../..'
+#alias -g ..6='../../../../../..'
+#alias -g ..7='../../../../../../..'
+#alias -g ..8='../../../../../../../..'
+#alias -g ..9='../../../../../../../../..'
+#alias -g ...='../..'
+#alias -g ....='../../..'
+#alias -g .....='../../../..'
+#alias -g ......='../../../../..'
+#
+## single character shortcuts - be sparing!
+#alias d='dirs -v'
+#alias l="ls -ltrhsa"
+#alias ls="ls -lha"
 
 alias ea="cat /proc/sys/kernel/random/entropy_avail"
 
 
 # mask built-ins with better defaults
-# alias cp='cp -i'
-# alias mv='mv -i'
-# alias rm='rm -i'
-# alias ping='ping -c 5'
+alias cp='cp -i'
+alias mv='mv -i'
+alias rm='rm -i'
+alias ping='ping -c 5'
 alias vi=vim
 
 # more ways to ls
-alias ll='ls -lh'
-alias la='ls -lAh'
-alias ldot='ls -ld .*'
+#alias ll='ls -lh'
+#alias la='ls -lAh'
+#alias ldot='ls -ld .*'
 
 # fix typos
 alias quit='exit'

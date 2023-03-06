@@ -9,3 +9,4 @@ cache/completions/*
 tmux/
 .zcompdump*
 .zsh_history
+*.zwc

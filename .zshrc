@@ -1,11 +1,12 @@
 umask 077
 autoload -U colors && colors
+fpath+=~/.complete
+
 
 # macos zsh-autocomplete
 if [[ $OSTYPE == darwin ]]; then
   if type brew &>/dev/null; then
     FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
-
     autoload -Uz compinit
     compinit
   fi
@@ -162,6 +163,9 @@ compdef _pipenv pipenv
 # linuxbrew
 [ -f /home/linuxbrew/.linuxbrew/bin/brew ] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
+# linuxbrew autojunp
+ [ -f /home/linuxbrew/.linuxbrew/etc/profile.d/autojump.sh ] && . /home/linuxbrew/.linuxbrew/etc/profile.d/autojump.sh
+
 # linuxbrew zsh-vi-mode
 [ -f /home/linuxbrew/.linuxbrew/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh ] && source /home/linuxbrew/.linuxbrew/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 
@@ -179,6 +183,9 @@ compdef _pipenv pipenv
 
 # linuxbrew zsh-syntax-highlighting
 [ -f /home/linuxbrew/.linuxbrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /home/linuxbrew/.linuxbrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# brew autojump
+[ -f /opt/homebrew/etc/profile.d/autojump.sh ] && . /opt/homebrew/etc/profile.d/autojump.sh
 
 # brew zsh-vi-mode
 [ -f /opt/homebrew/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh ] && source /opt/homebrew/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
@@ -209,3 +216,5 @@ fi
 #export SSH_AUTH_SOCK="/run/user/$UID/gnupg/S.gpg-agent.ssh"
 #gpg-connect-agent updatestartuptty /bye > /dev/null
 export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+
+
