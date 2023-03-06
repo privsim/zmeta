@@ -7,8 +7,8 @@ fpath+=~/.complete
 if [[ $OSTYPE == darwin ]]; then
   if type brew &>/dev/null; then
     FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
-    autoload -Uz compinit
-    compinit
+#    autoload -Uz compinit
+#    compinit
   fi
 fi
 
@@ -205,10 +205,13 @@ compdef _pipenv pipenv
 # brew zsh-syntax-highlighting
 [ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] &&  source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
+# linuxbrew zsh-syntax-highlighting
+[ -f /home/linuxbrew/.linuxbrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /home/linuxbrew/.linuxbrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
 #fpath+=(~/.zmeta/cache/completions:$fpath)
-if [[ $OSTYPE == darwin ]]; then
-  autoload -U compinit && compinit
-fi
+#if [[ $OSTYPE == darwin ]]; then
+#  autoload -U compinit && compinit
+#fi
 
 [ -f /Users/$USER/.docker/init-zsh.sh ] && source /Users/$USER/.docker/init-zsh.sh || true 
 
@@ -217,4 +220,5 @@ fi
 #gpg-connect-agent updatestartuptty /bye > /dev/null
 export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 
-
+autoload -Uz compinit
+compinit
