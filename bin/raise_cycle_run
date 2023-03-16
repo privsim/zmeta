@@ -4,7 +4,7 @@
 # set custom shortcut: raise_cycle_run
 # ~/.zmeta/bin/raise_cycle_run gnome-terminal-server "Gnome-terminal" (can vary check with wmctrl -x -l )
 
-if [[ $# ne 2 ]]; then
+if [[ $# -ne 2 ]]; then
   exit 1
 fi
 
