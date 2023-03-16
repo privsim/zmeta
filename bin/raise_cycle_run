@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# sudo apt install wmctrl
+# set custom shortcut: raise_cycle_run
+# ~/.zmeta/bin/raise_cycle_run gnome-terminal-server "Gnome-terminal" (can vary check with wmctrl -x -l )
+
 
 # if the window count is not 0 then cycle through raiseing the windows
 if [ `wmctrl -x -l | grep -c "$2"` != 0 ]  
@@ -28,5 +32,10 @@ then
 
 else
     $1 &
+
+    if [$? ne 0]; then
+      reduce=$(expr rindex "$1" '-') 
+      $reduce
+    fi
 fi
 
