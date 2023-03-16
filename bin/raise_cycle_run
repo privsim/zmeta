@@ -4,6 +4,10 @@
 # set custom shortcut: raise_cycle_run
 # ~/.zmeta/bin/raise_cycle_run gnome-terminal-server "Gnome-terminal" (can vary check with wmctrl -x -l )
 
+if [[ $# ne 2 ]]; then
+  exit 1
+fi
+
 
 # if the window count is not 0 then cycle through raiseing the windows
 if [ `wmctrl -x -l | grep -c "$2"` != 0 ]  
