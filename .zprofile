@@ -22,13 +22,7 @@ export LC_ALL="${LC_ALL:-en_US.UTF-8}"
 # ensure path arrays do not contain duplicates
 typeset -gU cdpath fpath mailpath path
 
-### zdotdir
-export ZDOTDIR=$HOME/.zmeta
 
-# set the list of directories that `cd` searches
-# cdpath=(
-#   $cdpath
-# )
 
 # set the list of directories that zsh searches for commands
 path=(

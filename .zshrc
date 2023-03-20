@@ -125,15 +125,42 @@ fi
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
+
+znap source ohmyzsh/ohmyzsh lib/cli.zsh
+znap source ohmyzsh/ohmyzsh lib/clipboard.zsh
+znap source ohmyzsh/ohmyzsh lib/completion.zsh
+znap source ohmyzsh/ohmyzsh lib/directories.zsh
+znap source ohmyzsh/ohmyzsh lib/functions.zsh
+
 znap source ohmyzsh/ohmyzsh plugins/git
+znap source ohmyzsh/ohmyzsh plugins/gh
 znap source ohmyzsh/ohmyzsh plugins/command-not-found
 znap source ohmyzsh/ohmyzsh plugins/docker
-znap source ohmyzsh/ohmyzsh plugins/docker-compose
-znap source ohmyzsh/ohmyzsh plugins/kubectl
+znap source ohmyzsh/ohmyzsh plugins/dotenv
+znap source ohmyzsh/ohmyzsh plugins/direnv
+znap source ohmyzsh/ohmyzsh plugins/docker-compose/docker-compose.plugin.zsh
+znap source ohmyzsh/ohmyzsh plugins/kubectl/kubectl.plugin.zsh
 znap source ohmyzsh/ohmyzsh plugins/kubectx
 znap source ohmyzsh/ohmyzsh plugins/terraform
 znap source ohmyzsh/ohmyzsh plugins/ansible
 znap source ohmyzsh/ohmyzsh plugins/virtualenv
+znap source ohmyzsh/ohmyzsh plugins/mosh
+znap source ohmyzsh/ohmyzsh plugins/minikube
+znap source ohmyzsh/ohmyzsh plugins/helm
+znap source ohmyzsh/ohmyzsh plugins/fluxcd
+znap source ohmyzsh/ohmyzsh plugins/argocd
+znap source ohmyzsh/ohmyzsh plugins/aliases
+znap source ohmyzsh/ohmyzsh plugins/autojump
+znap source ohmyzsh/ohmyzsh plugins/pre-commit
+
+
+znap source zsh-users/zsh-syntax-highlighting
+znap source zsh-users/zsh-completions
+znap source zsh-users/zsh-autosuggestions
+
+# znap source marlonrichert/zsh-autocomplete
+# znap source marlonrichert/zsh-edit
+
 
 # Load distribution-specific aliases
 [ -f $ZMETA/aliases-"$(uname)" ] && source $ZMETA/aliases-"$(uname)"
@@ -164,7 +191,7 @@ compdef _pipenv pipenv
 [ -f /home/linuxbrew/.linuxbrew/bin/brew ] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # linuxbrew autojunp
- [ -f /home/linuxbrew/.linuxbrew/etc/profile.d/autojump.sh ] && . /home/linuxbrew/.linuxbrew/etc/profile.d/autojump.sh
+[ -f /home/linuxbrew/.linuxbrew/etc/profile.d/autojump.sh ] && . /home/linuxbrew/.linuxbrew/etc/profile.d/autojump.sh
 
 # linuxbrew zsh-vi-mode
 [ -f /home/linuxbrew/.linuxbrew/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh ] && source /home/linuxbrew/.linuxbrew/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
