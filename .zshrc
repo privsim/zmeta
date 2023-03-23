@@ -239,6 +239,8 @@ compdef _pipenv pipenv
 #fi
 
 [ -f /Users/$USER/.docker/init-zsh.sh ] && source /Users/$USER/.docker/init-zsh.sh || true 
+[ -f /home/lclose/lib/oci_autocomplete.sh ] && source /home/lclose/lib/oci_autocomplete.sh
+
 
 #export GPG_TTY="$(tty)"
 #export SSH_AUTH_SOCK="/run/user/$UID/gnupg/S.gpg-agent.ssh"
