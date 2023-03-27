@@ -1,5 +1,7 @@
 echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/$USER
 
+read -p "Enter file name pattern: (*.wild* works): " file_pattern && shasum -a 256 --check <(cat $file_pattern) && echo "Checksum verification succeeded."
+
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 sudo ufw allow ssh
