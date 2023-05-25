@@ -18,6 +18,11 @@ fi
 
 zstyle ':znap:*' repos-dir ~/.zmeta/zsh-snap/repos
 source $ZMETA/zsh-snap/znap.zsh
+# Clone antidote if necessary.
+# [[ -d ${ZDOTDIR:-~}/.antidote ]] ||
+#  git clone https://github.com/mattmc3/antidote ${ZDOTDIR:-~}/.antidote
+# source ${ZDOTDIR:-~}/.antidote/antidote.zsh
+# antidote load
 
 # Set Zsh options needed for your scripts, or ones not set by your plugins.
 setopt INTERACTIVE_COMMENTS # Allow comments in interactive sessions.
@@ -67,9 +72,7 @@ setopt extended_history
 # Set any environment variables or keybindings related to your plugins or session.
 SHELL_SESSIONS_DISABLE=1
 KEYTIMEOUT=1
-
 bindkey -v
-
 export SOPS_AGE_KEY_FILE=~/.config/sops/age/keys.txt
 export EDITOR=vim
 export LANG="en_US.UTF-8"
@@ -86,7 +89,6 @@ export LESS="${LESS:--g -i -M -R -S -w -z-4}"
     https://github.com/marlonrichert/zsh-snap.git $ZMETA/zsh-snap
 
 znap source privsim/OA
-
 [ -f /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
 
 #Enable autojump
@@ -123,7 +125,10 @@ if [ -d "$HOME/.zmeta/bin" ]; then
   PATH="$HOME/.zmeta/bin:$PATH"
 fi
 
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+# set PATH so it includes user's .docker bin if it exists
+if [ -d "$HOME/.docker/bin" ]; then
+  PATH="$HOME/.docker/bin:$PATH"
+fi
 
 
 znap source ohmyzsh/ohmyzsh lib/cli.zsh
@@ -158,8 +163,11 @@ znap source zsh-users/zsh-syntax-highlighting
 znap source zsh-users/zsh-completions
 znap source zsh-users/zsh-autosuggestions
 
-# znap source marlonrichert/zsh-autocomplete
-# znap source marlonrichert/zsh-edit
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+
+
 
 
 # Load distribution-specific aliases
@@ -167,7 +175,6 @@ znap source zsh-users/zsh-autosuggestions
 
 # Load *nix aliases
 [ -f $ZMETA/aliases.zsh ] && source $ZMETA/aliases.zsh
-
 znap function _kubectl kubectl 'eval "$( kubectl completion zsh)"'
 compctl -K _kubectl kubectl
 
@@ -238,15 +245,19 @@ compdef _pipenv pipenv
 #  autoload -U compinit && compinit
 #fi
 
-[ -f /Users/$USER/.docker/init-zsh.sh ] && source /Users/$USER/.docker/init-zsh.sh || true 
+[ -f /Users/$USER/.docker/init-zsh.sh ] && source /Users/$USER/.docker/init-zsh.sh || true
 [ -f /home/lclose/lib/oci_autocomplete.sh ] && source /home/lclose/lib/oci_autocomplete.sh
 
+
+export NVM_DIR="$HOME/.config/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
 #export GPG_TTY="$(tty)"
 #export SSH_AUTH_SOCK="/run/user/$UID/gnupg/S.gpg-agent.ssh"
 #gpg-connect-agent updatestartuptty /bye > /dev/null
 export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 
-autoload -Uz compinit bashcompinit
+autoload -Uz compinit bashcompinit promptinit
 compinit
 bashcompinit
+promptinit

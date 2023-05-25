@@ -42,6 +42,12 @@ alias vi=vim
 #alias la='ls -lAh'
 #alias ldot='ls -ld .*'
 
+# fast
+alias ..='cd ..'
+alias ...='cd ../../'
+alias ....='cd ../../../'
+alias .....='cd ../../../../'
+
 # fix typos
 alias quit='exit'
 alias cd..='cd ..'
