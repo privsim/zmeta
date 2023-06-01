@@ -90,6 +90,9 @@ zi from'gh-r' lbin'!' nocompile for \
   @koalaman/shellcheck @pemistahl/grex     \
   @melbahja/got        @r-darwish/topgrade \
   @sharkdp/fd          @sharkdp/hyperfine  \
+  @sharkdp/bat         @sharkdp/vivid    \
+  @alexellis/arkade   @helix-editor/helix \
+  @mozilla/sops       @ClementTsang/bottom \
   lbin'!* -> jq'       @jqlang/jq        \
   lbin'!* -> shfmt'    @mvdan/sh           \
   lbin'!**/nvim'       @neovim/neovim      \
@@ -144,7 +147,7 @@ zi for atload'
     as'null' id-as'zinit/cleanup' lucid nocd wait \
   $ZI_REPO/null
 # vim:ft=zsh:sw=2:sts=2
-
+export LS_COLORS="$(vivid generate snazzy)"
 # If we gotta duck, lets get it out of the way first thing
 [ -f "$ZMETA/ascii/ducky.txt" ] && neofetch --source "$ZMETA/ascii/ducky.txt" -L
 [ -f "$ZMETA/aliases.zsh" ] && source $ZMETA/aliases.zsh
