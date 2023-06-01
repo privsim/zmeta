@@ -2,7 +2,7 @@ mkd () {
     mkdir -p "$@" && cd "$@"
 }
 
-batdiff() 
+batdiff()
 {
     git diff --name-only --diff-filter=d | xargs bat --diff
 }
@@ -137,8 +137,8 @@ function secret {  # list preferred id last
   output="${HOME}/$(basename ${1}).$(date +%F).enc"
   gpg --encrypt --armor \
     --output ${output} \
-    -r 0xFF3E7D88647EBCDB \
-    -r github@duh.to \
+    -r 0xAB6CA4121538CB6286442A6B7DA2123145D4CE83 \
+    -r miniC.M1@proton.me \
     "${1}" && echo "${1} -> ${output}" }
 
 function secret () {
@@ -168,9 +168,6 @@ function upload {
    curl -sq -F "file=@${@}" ${UPLOAD} | \
      grep -q "Saved" && printf "Uploaded ${@}\n" }
 
-function vpn {
-  ssh -C -N -L 5555:127.0.0.1:8118 vpn }
-
-
-
+#function vpn {
+#  ssh -C -N -L 5555:127.0.0.1:8118 vpn }
 
