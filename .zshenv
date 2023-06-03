@@ -20,6 +20,16 @@ export XDG_CACHE_HOME=~/.cache
 export XDG_DATA_HOME=~/.local/share
 export XDG_RUNTIME_DIR=~/.xdg
 
+# set the list of directories that zsh searches for commands
+path=(
+    $HOME/{,s}bin(N)
+    $HOME/.local/{,s}bin(N)
+	$HOME/{.arkade,.zmeta,.cargo,.docker}/bin(N)
+    /opt/{homebrew,local}/{,s}bin(N)
+    /usr/local/{,s}bin(N)
+    $path
+)
+
 if [ -e /etc/os-release ]; then
   if [  $(grep -qi "ubuntu" /etc/os-release) ]; then
     skip_global_compinit=1
