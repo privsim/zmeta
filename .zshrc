@@ -55,7 +55,8 @@ zi for is-snippet \
   OMZL::{'clipboard','compfix','completion','git','grep','key-bindings'}.zsh \
   OMZP::brew \
   PZT::modules/{'history','rsync'}
-zi as'completion' for OMZP::{'golang/_golang','pip/_pip','terraform/_terraform'}
+zi as'completion' for OMZP::{'golang/_golang','pip/_pip','terraform/_terraform'} \
+  OMZP::{'kubectl/kubectl.plugin.zsh','kubectx/kubectx.plugin.zsh'}
 #=== COMPLETIONS ======================================
 local GH_RAW_URL='https://raw.githubusercontent.com'
 install_completion(){ zinit for as'completion' nocompile id-as"$1" is-snippet "$GH_RAW_URL/$2"; }
@@ -67,6 +68,7 @@ install_completion 'fzf-completion/_fzf'       'junegunn/fzf/master/shell/comple
 install_completion 'git-completion/_git'       'git/git/master/contrib/completion/git-completion.zsh'
 install_completion 'kubectx-completion/_kubectx' 'ahmetb/kubectx/master/completion/_kubectx.zsh'
 install_completion 'kubens-completion/_kubens'  'ahmetb/kubectx/master/completion/_kubens.zsh'
+install_completion OMZP::'kubectl/_kubectl'     'ohmyzsh/ohmyzsh/master/plugins/kubectl/kubectl.plugin.zsh'
 #=== PROMPT ===========================================
 zi light-mode for \
   compile'(pure|async).zsh' multisrc'(pure|async).zsh' atinit"
@@ -98,6 +100,7 @@ zi from'gh-r' lbin'!' nocompile for \
   @sharkdp/hexyl       @sharkdp/pastel     \
   @alexellis/arkade   @helix-editor/helix \
   @mozilla/sops       @ClementTsang/bottom \
+  @bonnefoa/kubectl-fzf \
   lbin'!* -> jq'       @jqlang/jq        \
   lbin'!* -> shfmt'    @mvdan/sh           \
   lbin'!**/nvim'       @neovim/neovim      \
@@ -153,6 +156,8 @@ zi for atload'
   $ZI_REPO/null
 # vim:ft=zsh:sw=2:sts=2
 export LS_COLORS="$(vivid generate snazzy)"
+zinit wait lucid for \
+    OMZ::plugins/kubectl/kubectl.plugin.zsh
 # If we gotta duck, lets get it out of the way first thing
 [ -f "$ZMETA/ascii/ducky.txt" ] && neofetch --source "$ZMETA/ascii/ducky.txt" -L
 [ -f "$ZMETA/aliases.zsh" ] && source $ZMETA/aliases.zsh
@@ -166,3 +171,4 @@ export GPG_TTY="$(tty)"
 # export SSH_AUTH_SOCK="/run/user/$UID/gnupg/S.gpg-agent.ssh"
 gpg-connect-agent updatestartuptty /bye > /dev/null
 export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+

@@ -1,0 +1,275 @@
+#!/bin/bash
+# Store on board values for startup test
+# g810-led -fx-store color all ffffff
+# g810-led -fx-store cwave keys ffffff
+# g810-led -fx-store color logo ffffff
+# g810-led -gn color indicators ffffff
+
+# Initialize macro n keys
+#g810-led -mr 1
+#g810-led -mn 3
+
+# Set gkeys independence
+#g810-led -gkm 1
+g910-led -mr 1
+g910-led -mn 7
+
+
+
+
+# Set keys group med blue
+g810-led -gn keys 1261A0
+
+g810-led -kn 'Q' 1261A0
+
+g810-led -kn q 1261A0
+
+g810-led -kn z 1261A0
+
+g810-led -kn x 1261A0
+
+g810-led -kn r 1261A0
+
+g810-led -kn t 1261A0
+
+g810-led -kn y 1261A0
+
+g810-led -kn u 1261A0
+
+g810-led -kn o 1261A0
+
+g810-led -kn p 1261A0
+
+g810-led -kn open_bracket 1261A0
+
+g810-led -kn semicolon 1261A0
+
+g810-led -kn n 1261A0
+
+g810-led -kn t 1261A0
+
+g810-led -kn y 1261A0
+
+g810-led -kn x 1261A0
+
+# Set keys borders lighter shade
+
+g810-led -kn open_bracket ADD8E6
+
+g810-led -kn close_bracket ADD8E6
+
+g810-led -kn semicolon ADD8E6
+
+g810-led -kn dollar ADD8E6
+
+g810-led -kn slash ADD8E6
+
+g810-led -kn tab ADD8E6
+
+g810-led -kn capslock ADD8E6
+
+
+# Fkey diversify
+g810-led -gn fkeys 00FFFF
+
+g810-led -kn f1 00FFFF
+
+g810-led -kn f2 0000FF
+
+g810-led -kn f2 0000FF
+
+g810-led -kn f3 0000FF
+
+g810-led -kn f4 0000FF
+
+g810-led -kn f5 00FFFF
+
+g810-led -kn f6 0000FF
+
+g810-led -kn f7 0000FF
+
+g810-led -kn f8 0000FF
+
+g810-led -kn f9 FF0000
+
+g810-led -kn f10 FF0000
+
+g810-led -kn f11 FF0000
+
+g810-led -kn f12 0FFF00
+
+# Set function group, arrows and awsd white
+
+g810-led -gn arrows FFFFFF
+
+g810-led -gn functions FFFFFF
+
+g810-led -kn a FF0000
+
+g810-led -kn w FF0000
+
+g810-led -kn s FF0000
+
+g810-led -kn d FF0000
+
+g810-led -kn a FF0000
+
+g810-led -kn w FF0000
+
+g810-led -kn s FF0000
+
+g810-led -kn d FF0000
+
+
+# Set numeric group white
+g810-led -gn numeric 0FFFF0
+
+# Set group gkeys hot pink
+g810-led -gn gkeys F000FF
+
+# Set top numbers to a light green.
+g810-led -kn 0 51FF83
+
+g810-led -kn 1 51FF83
+
+g810-led -kn 2 51FF83
+
+g810-led -kn 5 51FF83
+
+g810-led -kn 6 51FF83
+
+g810-led -kn 7 51FF83
+
+g810-led -kn "-" 51FF83
+
+g810-led -kn "=" 51FF83
+
+# Set darkgreen pound #
+
+g810-led -kn 3  F0F0F0
+
+# Set group modifiers and indicators to white.
+g810-led -gn modifiers FFFFFF
+
+
+# Set key highlights bright green
+g810-led -kn ctrlr 0FFF00
+
+g810-led -kn printscr 0FFF00
+
+g810-led -kn capslock 0FFF00
+
+g810-led -kn "tilde" 0FFF00
+
+g810-led -kn enter 0FFF00
+
+g810-led -kn altr 0FFF00
+
+g810-led -kn altl 0FFF00
+
+
+# Set green
+g810-led -kn pageup 00B300 #
+
+g810-led -kn pagedown 00B300
+
+g810-led -kn 4 00FF00
+
+
+
+# Set reds
+g810-led -kn delete FF0000
+
+g810-led -kn delete FF0000
+
+g810-led -kn backspace FF0000
+
+g810-led -kn escape FF0000
+
+g810-led -kn escape FF0000
+
+g810-led -kn 9 FF0000
+
+g810-led -kn 0 FF0000
+
+g810-led -kn comma FF0000
+
+g810-led -kn period FF0000
+
+
+
+
+# Set group multimedia to red
+g810-led -gn multimedia FF000F
+
+# Set hotpink keys
+
+
+g810-led -kn num/ FF69B4
+
+g810-led -kn numlock FF69B4
+
+
+g810-led -kn scrolllock FF0000
+
+g810-led -kn space FF69B4
+
+g810-led -kn winr FF69B4
+
+g810-led -kn winl FF69B4
+
+# Set purple
+
+g810-led -kn quote F000FF
+
+g810-led -kn numenter F000FF
+
+g810-led -kn num+ F000FF
+
+g810-led -kn num- F000FF
+
+g810-led -kn "c" F000FF
+g810-led -kn "c" F000FF
+
+g810-led -kn "v" F000FF
+
+g810-led -kn menu F000FF
+
+g810-led -kn insert F000FF
+
+g810-led -kn tab F000FF
+
+g810-led -kn ctrll F000FF
+
+g810-led -kn backslash F000FF
+
+g810-led -kn num0 F000FF
+
+g810-led -kn num0 F000FF
+
+g810-led -kn num. F000FF
+
+g810-led -kn pausebreak F000FF
+g810-led -kn num. F000FF
+
+g810-led -kn pausebreak F000FF
+
+# Set 8* and home deep blue0
+g810-led -kn home 00008B
+
+g810-led -kn 8 00008B
+
+g810-led -kn num* 00008B
+
+
+g810-led -k end 0000FF has bug
+
+
+# set logo to white
+g810-led -kn logo ffffff
+
+
+
+# commit changes
+g810-led -c
+
