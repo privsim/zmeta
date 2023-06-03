@@ -28,14 +28,11 @@ typeset -gU cdpath fpath mailpath path
 path=(
     $HOME/{,s}bin(N)
     $HOME/.local/{,s}bin(N)
+	$HOME/{.arkade,.zmeta,.cargo,.docker}/bin(N)
     /opt/{homebrew,local}/{,s}bin(N)
     /usr/local/{,s}bin(N)
     $path
 )
-
-### less
-
-# set default less options
 
 # set the less input preprocessor
 if [[ -z "$LESSOPEN" ]] && (( $#commands[(i)lesspipe(|.sh)] )); then

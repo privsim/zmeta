@@ -25,33 +25,3 @@ if [ -e /etc/os-release ]; then
     skip_global_compinit=1
   fi
 fi
-
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ]; then
-  PATH="$HOME/bin:$PATH"
-fi
-
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.local/bin" ]; then
-  PATH="$HOME/.local/bin:$PATH"
-fi
-# set PATH so it includes user's arkade bin if it exists
-if [ -d "$HOME/.arkade/bin" ]; then
-  PATH="$HOME/.arkade/bin:$PATH"
-fi
-
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.cargo/bin" ]; then
-  PATH="$HOME/.cargo/bin:$PATH"
-fi
-
-# set PATH so it includes user's zmeta bin if it exists
-if [ -d "$HOME/.zmeta/bin" ]; then
-  PATH="$HOME/.zmeta/bin:$PATH"
-fi
-
-# set PATH so it includes user's .docker bin if it exists
-if [ -d "$HOME/.docker/bin" ]; then
-  PATH="$HOME/.docker/bin:$PATH"
-fi
-

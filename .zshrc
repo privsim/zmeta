@@ -63,6 +63,10 @@ install_completion 'brew-completion/_brew'     'Homebrew/brew/master/completions
 install_completion 'docker-completion/_docker' 'docker/cli/master/contrib/completion/zsh/_docker'
 install_completion 'exa-completion/_exa'       'ogham/exa/master/completions/zsh/_exa'
 install_completion 'fd-completion/_fd'         'sharkdp/fd/master/contrib/completion/_fd'
+install_completion 'fzf-completion/_fzf'       'junegunn/fzf/master/shell/completion.zsh'
+install_completion 'git-completion/_git'       'git/git/master/contrib/completion/git-completion.zsh'
+install_completion 'kubectx-completion/_kubectx' 'ahmetb/kubectx/master/completion/_kubectx.zsh'
+install_completion 'kubens-completion/_kubens'  'ahmetb/kubectx/master/completion/_kubens.zsh'
 #=== PROMPT ===========================================
 zi light-mode for \
   compile'(pure|async).zsh' multisrc'(pure|async).zsh' atinit"
@@ -91,6 +95,7 @@ zi from'gh-r' lbin'!' nocompile for \
   @melbahja/got        @r-darwish/topgrade \
   @sharkdp/fd          @sharkdp/hyperfine  \
   @sharkdp/bat         @sharkdp/vivid    \
+  @sharkdp/hexyl       @sharkdp/pastel     \
   @alexellis/arkade   @helix-editor/helix \
   @mozilla/sops       @ClementTsang/bottom \
   lbin'!* -> jq'       @jqlang/jq        \

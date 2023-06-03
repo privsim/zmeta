@@ -6,7 +6,7 @@ sudo ufw default deny incoming
 sudo ufw default allow outgoing
 sudo ufw allow ssh
 sudo ufw enable
-sudo ufw status 
+sudo ufw status
 ss -ltn
 ip addr show $(ip route | awk '/default/ { print $5 }') | grep "inet" | head -n 1 | awk '/inet/ {print $2}' | cut -d'/' -f1
 sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -deactivate -configure -access -off
@@ -82,4 +82,4 @@ git clone https://github.com/tmux-plugins/tpm $ZMETA/tmux/plugins/tpm
 
 
 alias k=kubectl
-source <(kubectl completion bash | sed 's/kubectl/k/g')
+source <(kubectl completion zsh | sed 's/kubectl/k/g')
