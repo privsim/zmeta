@@ -133,7 +133,6 @@ function _pip_completion {
 zi light-mode for \
     atinit"bindkey -M vicmd '^e' edit-command-line" compile'zsh-vim-mode*.zsh' \
   softmoth/zsh-vim-mode \
-  thewtex/tmux-mem-cpu-load \
     svn submods'zsh-users/zsh-history-substring-search -> external' \
   OMZ::plugins/history-substring-search \
     atpull'zinit creinstall -q .' blockf \
