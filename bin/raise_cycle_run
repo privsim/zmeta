@@ -11,17 +11,22 @@ fi
 count=$(wmctrl -x -l | grep -c "$2")
 sanity=$(echo "$2" | tr '[:upper:]' '[:lower:]')
 
+# Get id of the focused window.
+active_win_id=$(xprop -root | grep '^_NET_ACTIVE_W' | awk -F'# 0x' '{print $2}')
+
+# Get window manager class of focused window.
+win_class=$(wmctrl -x -l | grep "$active_win_id" | awk '{print $2 " " $3}')
+
+# Retrieve list of all windows matching with the class above.
+win_list=$(wmctrl -x -l | grep -- "$win_class" | awk '{print $1}')
+
+# check if there is a window with the given title and it is not the focused window, then focus it
+if [[ $count -ge 1 ]] && [[ $win_class != "$2" ]]; then
+	wmctrl -a "$2"
+fi
+
 # if the window count is greater or equal to 2 then cycle through focusing the windows
 if [[ $count -ge 2 ]]; then
-
-    # Get id of the focused window.
-    active_win_id=$(xprop -root | grep '^_NET_ACTIVE_W' | awk -F'# 0x' '{print $2}')
-
-    # Get window manager class of focused window.
-    win_class=$(wmctrl -x -l | grep "$active_win_id" | awk '{print $2 " " $3}')
-
-    # Retrieve list of all windows matching with the class above.
-    win_list=$(wmctrl -x -l | grep -- "$win_class" | awk '{print $1}')
 
     # Find the next window to focus.
     switch_to=$(echo "$win_list" | awk -v active_win_id="$active_win_id" '$0~active_win_id{p=1;next} p{print $1;exit}')
