@@ -56,7 +56,7 @@ zi for is-snippet \
   OMZP::brew \
   PZT::modules/{'history','rsync'}
 zi as'completion' for OMZP::{'golang/_golang','pip/_pip','terraform/_terraform'} \
-  OMZP::{'kubectl/kubectl.plugin.zsh','kubectx/kubectx.plugin.zsh', 'minikube/minikube.plugin.zsh'}
+  OMZP::{'kubectl/kubectl.plugin.zsh','kubectx/kubectx.plugin.zsh','minikube/minikube.plugin.zsh'}
 #=== COMPLETIONS ======================================
 local GH_RAW_URL='https://raw.githubusercontent.com'
 install_completion(){ zinit for as'completion' nocompile id-as"$1" is-snippet "$GH_RAW_URL/$2"; }
