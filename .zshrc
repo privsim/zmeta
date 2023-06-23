@@ -160,7 +160,7 @@ zinit wait lucid for \
 # If we gotta duck, lets get it out of the way first thing
 [ -f "$ZMETA/ascii/ducky.txt" ] && neofetch --source "$ZMETA/ascii/ducky.txt" -L
 [ -f "$ZMETA/aliases.zsh" ] && source $ZMETA/aliases.zsh
-[ -f "$ZMETA/aliases-$(uname)" ] && source "$ZMETA/aliases-$(uname)"
+[ -f "$ZMETA/aliases-$(uname).zsh" ] && source "$ZMETA/aliases-$(uname).zsh"
 #Enable p
 [ -f $ZMETA/functions/p ] && source $ZMETA/functions/p
 #Enable various
