@@ -2,6 +2,12 @@ echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/$USER
 
 read -p "Enter file name pattern: (*.wild* works): " file_pattern && shasum -a 256 --check --ignore-missing <(cat $file_pattern) && echo "Checksum verification succeeded."
 
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 sudo ufw allow ssh
