@@ -28,6 +28,8 @@
 #alias ls="ls -lha"
 
 alias ea="cat /proc/sys/kernel/random/entropy_avail"
+alias 64AN='openssl rand -base64 48 | tr -d '+/=' | cut -c -64 | pbcopy'
+alias 64ANU='tr -dc 'A-Za-z0-9' < /dev/urandom | head -c64 | pbcopy'
 
 
 # mask built-ins with better defaults
