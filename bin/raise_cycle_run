@@ -2,7 +2,7 @@
 
 # Dependency: sudo apt install wmctrl
 # set custom shortcut: raise_cycle_run
-# ~/.zmeta/bin/raise_cycle_run gnome-terminal-server "Gnome-terminal" (can vary check with wmctrl -x -l )
+# ~/.zmeta/bin/raise_cycle_run gnome-terminal "Gnome-terminal" (can vary check with wmctrl -x -l )
 
 if [ $# -ne 2 ]; then
     exit 1
