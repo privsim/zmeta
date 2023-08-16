@@ -192,5 +192,12 @@ function shuf () {
     sort -R "$@" | head -n 1
 }
 
-alias stealth='sudo ifconfig en0 lladdr 00:11:22:33:44:55'
-alias unstealth='sudo ifconfig en1 lladdr a4:5e:60:e8:b9:05'
+# Function to capture errors from logs across all Docker containers
+capture_docker_errors() {
+    for container_id in $(docker ps -q); do
+        echo "Errors from container $container_id:"
+        docker logs $container_id 2>&1 | grep "ERROR"
+        echo "----------------------------------"
+    done
+}
+
