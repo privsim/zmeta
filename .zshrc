@@ -99,7 +99,7 @@ zi from'gh-r' lbin'!' nocompile for \
   @sharkdp/bat         @sharkdp/vivid    \
   @sharkdp/hexyl       @sharkdp/pastel     \
   @alexellis/arkade   @helix-editor/helix \
-  @mozilla/sops       @ClementTsang/bottom \
+  @ClementTsang/bottom \
   @bonnefoa/kubectl-fzf \
   lbin'!* -> jq'       @jqlang/jq        \
   lbin'!* -> shfmt'    @mvdan/sh           \
