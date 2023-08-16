@@ -171,3 +171,11 @@ function upload {
 #function vpn {
 #  ssh -C -N -L 5555:127.0.0.1:8118 vpn }
 
+# Function to capture errors from logs across all Docker containers
+capture_docker_errors() {
+    for container_id in $(docker ps -q); do
+        echo "Errors from container $container_id:"
+        docker logs $container_id 2>&1 | grep "ERROR"
+        echo "----------------------------------"
+    done
+}
