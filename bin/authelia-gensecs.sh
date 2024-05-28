@@ -44,7 +44,7 @@ echo "AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE=/config/.secrets/smtp" >> "${SECRETS_
 echo
 
 # Generate and save OIDC Private Key
-openssl genpkey -algorithm RSA -out "${SECRET_DIR}/oidc.key" 4096
+openssl genpkey -algorithm RSA -out "${SECRET_DIR}/oidc.key" -pkeyopt rsa_keygen_bits:4096
 echo "AUTHELIA_IDENTITY_PROVIDERS_OIDC_ISSUER_PRIVATE_KEY_FILE=/config/.secrets/oidc.key" >> "${SECRETS_FILE}"
 
 # Prompt for domain name for the TLS certificate
