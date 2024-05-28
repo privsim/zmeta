@@ -17,19 +17,22 @@ generate_secret() {
 }
 
 # Generate and save JWT Secret
-generate_secret "jwtsecret"
+generate_secret "jwt_secret"
 
 # Generate and save Session Secret
-generate_secret "session"
+generate_secret "session_secret"
 
 # Generate and save Redis Password
-generate_secret "redis"
+generate_secret "session_redis_password"
 
 # Generate and save Storage Encryption Key
-generate_secret "storage"
+generate_secret "storage_encryption_key"
 
 # Generate and save MariaDB Password
-generate_secret "mysql"
+generate_secret "storage_mysql_password"
+
+# Generate and save OIDC HMAC Secret
+generate_secret "identity_providers_oidc_hmac_secret"
 
 # Prompt for SMTP Password
 echo "Enter SMTP password:"
@@ -39,9 +42,6 @@ stty echo
 echo "${SMTP}" > "${SECRET_DIR}/smtp"
 echo "AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE=/config/.secrets/smtp" >> "${SECRETS_FILE}"
 echo
-
-# Generate and save OIDC HMAC Secret
-generate_secret "oidcsecret"
 
 # Generate and save OIDC Private Key and Certificate
 openssl genrsa -out "${SECRET_DIR}/oidc.key" 4096
@@ -58,7 +58,7 @@ openssl req -new -key "${SECRET_DIR}/tlskey.pem" -out "${SECRET_DIR}/tlskey.csr"
 openssl x509 -req -days 365 -in "${SECRET_DIR}/tlskey.csr" -signkey "${SECRET_DIR}/tlskey.pem" -out "${SECRET_DIR}/tlscert.pem"
 rm "${SECRET_DIR}/tlskey.csr" # Remove CSR as it's no longer needed
 echo "AUTHELIA_SERVER_TLS_KEY_FILE=/config/.secrets/tlskey.pem" >> "${SECRETS_FILE}"
-echo "AUTHELIA_SERVER_TLS_CERT_FILE=/config/.secrets/tlscert.pem" >> "${SECRETS_FILE}"
+echo "AUTHELIA_SERVER_TLS_CERTIFICATE_FILE=/config/.secrets/tlscert.pem" >> "${SECRETS_FILE}"
 
 # Set the correct privileges
 chmod 600 -R "${SECRET_DIR}"
