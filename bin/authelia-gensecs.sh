@@ -1,39 +1,67 @@
 #!/bin/bash
 
-# Define the output directory
-SECRET_DIR="authelia/secrets"
+# Define the output directory for secrets
+SECRET_DIR="authelia/.secrets"
 mkdir -p "${SECRET_DIR}"
 
-# Function to generate a 64-character alphanumeric secret
+# Define the secrets mapping file
+SECRETS_FILE="authelia/secrets"
+echo "### Authelia ENV vars mapping:" > "${SECRETS_FILE}"
+
+# Function to generate a 64-character alphanumeric secret and append the mapping to the secrets file
 generate_secret() {
-  tr -cd '[:alnum:]' < /dev/urandom | fold -w 64 | head -n 1
+  local secret_name=$1
+  local secret_file="${SECRET_DIR}/${secret_name}"
+  tr -cd '[:alnum:]' < /dev/urandom | fold -w 64 | head -n 1 > "${secret_file}"
+  echo "AUTHELIA_${secret_name^^}_FILE=/config/.secrets/${secret_name}" >> "${SECRETS_FILE}"
 }
 
 # Generate and save JWT Secret
-generate_secret > "${SECRET_DIR}/jwtsecret"
+generate_secret "jwtsecret"
 
 # Generate and save Session Secret
-generate_secret > "${SECRET_DIR}/session"
+generate_secret "session"
+
+# Generate and save Redis Password
+generate_secret "redis"
 
 # Generate and save Storage Encryption Key
-generate_secret > "${SECRET_DIR}/storage"
+generate_secret "storage"
 
 # Generate and save MariaDB Password
-generate_secret > "${SECRET_DIR}/mariadb"
+generate_secret "mysql"
 
-# SMTP Password
-echo "enter smtp password";
-read SMTP;
+# Prompt for SMTP Password
+echo "Enter SMTP password:"
+stty -echo
+read SMTP
+stty echo
 echo "${SMTP}" > "${SECRET_DIR}/smtp"
+echo "AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE=/config/.secrets/smtp" >> "${SECRETS_FILE}"
+echo
 
 # Generate and save OIDC HMAC Secret
-generate_secret > "${SECRET_DIR}/oidcsecret"
+generate_secret "oidcsecret"
 
-# Generate and save OIDC Private Key
+# Generate and save OIDC Private Key and Certificate
 openssl genrsa -out "${SECRET_DIR}/oidc.key" 4096
 openssl rsa -in "${SECRET_DIR}/oidc.key" -outform PEM -pubout -out "${SECRET_DIR}/oidc.pem"
+echo "AUTHELIA_IDENTITY_PROVIDERS_OIDC_ISSUER_PRIVATE_KEY_FILE=/config/.secrets/oidc.pem" >> "${SECRETS_FILE}"
+
+# Prompt for domain name for the TLS certificate
+echo "Enter the domain name for the TLS certificate (e.g., yourdomain.com):"
+read DOMAIN
+
+# Generate and save TLS Private Key and Certificate
+openssl genpkey -algorithm RSA -out "${SECRET_DIR}/tlskey.pem" -pkeyopt rsa_keygen_bits:4096
+openssl req -new -key "${SECRET_DIR}/tlskey.pem" -out "${SECRET_DIR}/tlskey.csr" -subj "/CN=${DOMAIN}"
+openssl x509 -req -days 365 -in "${SECRET_DIR}/tlskey.csr" -signkey "${SECRET_DIR}/tlskey.pem" -out "${SECRET_DIR}/tlscert.pem"
+rm "${SECRET_DIR}/tlskey.csr" # Remove CSR as it's no longer needed
+echo "AUTHELIA_SERVER_TLS_KEY_FILE=/config/.secrets/tlskey.pem" >> "${SECRETS_FILE}"
+echo "AUTHELIA_SERVER_TLS_CERT_FILE=/config/.secrets/tlscert.pem" >> "${SECRETS_FILE}"
 
 # Set the correct privileges
 chmod 600 -R "${SECRET_DIR}"
 
 echo "Secrets generated and saved in ${SECRET_DIR}"
+echo "Environment variable mappings saved in ${SECRETS_FILE}"
