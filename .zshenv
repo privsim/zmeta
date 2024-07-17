@@ -20,6 +20,10 @@ export XDG_CACHE_HOME=~/.cache
 export XDG_DATA_HOME=~/.local/share
 export XDG_RUNTIME_DIR=~/.xdg
 
+# Go path
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+
 # set the list of directories that zsh searches for commands
 path=(
     $HOME/{,s}bin(N)
