@@ -134,7 +134,7 @@ zi light-mode for \
     atinit"bindkey -M vicmd '^e' edit-command-line" compile'zsh-vim-mode*.zsh' \
   softmoth/zsh-vim-mode \
     svn submods'zsh-users/zsh-history-substring-search -> external' \
-  OMZ::plugins/history-substring-search \
+  zsh-users/zsh-history-substring-search \
     atpull'zinit creinstall -q .' blockf \
   zsh-users/zsh-completions \
     atload'_zsh_autosuggest_start' \
@@ -169,7 +169,6 @@ zinit wait lucid for \
 export GPG_TTY="$(tty)"
 gpg-connect-agent updatestartuptty /bye > /dev/null
 export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-eval $(keychain --eval --agents ssh,gpg --inherit any -q)
+eval $(keychain --eval --agents ssh,gpg --inherit any -q )
 
 eval "$(direnv hook zsh)"
-
