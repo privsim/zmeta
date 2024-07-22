@@ -16,3 +16,6 @@ bin/tree
 dots.com
 .zsh_sessions/
 man
+.env
+.envrc
+
