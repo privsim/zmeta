@@ -12,3 +12,7 @@ tmux/
 prefs
 *.p12
 zinit
+bin/tree
+dots.com
+.zsh_sessions/
+man
