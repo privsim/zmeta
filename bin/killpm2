@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Stop all running PM2 applications
+pm2 stop all
+
+# Delete all managed PM2 applications
+pm2 delete all
+
+# Clear PM2 logs
+pm2 flush
+
+# Uninstall PM2 startup script
+pm2 unstartup
+
+# Kill the PM2 daemon
+pm2 kill
+
+# Optionally, remove PM2 configuration files
+echo "Do you want to remove PM2 configuration files? (y/n)"
+read -r remove_config
+
+if [ "$remove_config" = "y" ]; then
+  rm -rf ~/.pm2
+  echo "PM2 configuration files removed."
+else
+  echo "PM2 configuration files retained."
+fi
+
+echo "PM2 cleanup completed."
