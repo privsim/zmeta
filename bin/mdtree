@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Check if the 'tree' command is installed
+if ! command -v tree &> /dev/null
+then
+    echo "'tree' command not found. Please install 'tree' first."
+    exit 1
+fi
+
+# Check if the 'mdcat' command is installed
+if ! command -v mdcat &> /dev/null
+then
+    echo "'mdcat' command not found. Please install 'mdcat' first."
+    exit 1
+fi
+
+# Scan the repository and list all README.md files with their paths
+echo "Scanning repository for README.md files..."
+
+# Use tree to find README.md files and store their paths in an array
+readme_files=($(tree -f -i -P 'README.md' | grep 'README.md'))
+
+if [ ${#readme_files[@]} -eq 0 ]; then
+    echo "No README.md files found in the repository."
+    exit 0
+fi
+
+echo "Found ${#readme_files[@]} README.md files."
+
+# Display the contents of each README.md file using mdcat
+for readme in "${readme_files[@]}"; do
+    echo "Displaying contents of: $readme"
+    mdcat "$readme"
+    echo "----------------------------------------"
+done
+
+echo "All README.md files displayed."
