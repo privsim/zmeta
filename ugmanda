@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+# Ensure the script is run as root
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root" 
+   exit 1
+fi
+
+# Define the MOTD file location
+MOTD_FILE="/etc/motd"
+
+# Create a backup of the existing MOTD file
+if [ -f "$MOTD_FILE" ]; then
+    cp $MOTD_FILE $MOTD_FILE.bak
+    echo "Backup of current MOTD created at $MOTD_FILE.bak"
+fi
+
+# Write the legally binding unauthorized access message to the MOTD file
+cat << 'EOF' > $MOTD_FILE
+******************************************************************
+*                                                                *
+*                          WARNING                               *
+*                                                                *
+* This system is for authorized use only.                        *
+* All activities on this system are monitored and recorded.      *
+* Unauthorized access to this system is prohibited and may       *
+* result in criminal and/or civil prosecution.                   *
+* All users expressly consent to monitoring and recording        *
+* and understand that if such monitoring reveals evidence of     *
+* criminal activity, system personnel may provide the evidence   *
+* of such activity to law enforcement officials.                 *
+*                                                                *
+******************************************************************
+EOF
+
+echo "MOTD updated successfully."
