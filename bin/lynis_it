@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# Define variables
+LYNIS_DIR="$HOME/.lynis"
+LYNIS_REPO="https://github.com/CISOfy/lynis.git"
+SYMLINK_PATH="/usr/local/bin/lynis"
+OS=$(uname -s)
+
+# Function to install prerequisites (git, etc.)
+install_prerequisites() {
+  if [[ "$OS" == "Linux" ]]; then
+    if command -v apt >/dev/null 2>&1; then
+      sudo apt update
+      sudo apt install -y git
+    else
+      echo "Unsupported Linux distribution. Please install Git manually."
+      exit 1
+    fi
+  elif [[ "$OS" == "Darwin" ]]; then
+    if ! command -v brew >/dev/null 2>&1; then
+      echo "Homebrew not found. Please install Homebrew and rerun this script."
+      exit 1
+    fi
+    brew install git
+  else
+    echo "Unsupported OS: $OS"
+    exit 1
+  fi
+}
+
+# Function to clone the Lynis repository
+clone_lynis_repo() {
+  if [ -d "$LYNIS_DIR" ]; then
+    echo "Lynis directory already exists. Pulling latest changes..."
+    git -C "$LYNIS_DIR" pull
+  else
+    echo "Cloning Lynis repository..."
+    git clone "$LYNIS_REPO" "$LYNIS_DIR"
+  fi
+}
+
+# Function to change ownership of the Lynis directory
+change_ownership() {
+  echo "Changing ownership of the Lynis directory to root..."
+  sudo chown -R root:wheel "$LYNIS_DIR"
+}
+
+# Function to create a symlink to the Lynis binary
+create_symlink() {
+  if [ -L "$SYMLINK_PATH" ]; then
+    echo "Symlink already exists at $SYMLINK_PATH"
+  else
+    echo "Creating symlink for Lynis..."
+    sudo ln -s "$LYNIS_DIR/lynis" "$SYMLINK_PATH"
+  fi
+}
+
+# Function to set up the environment for Lynis
+setup_lynis() {
+  install_prerequisites
+  clone_lynis_repo
+  change_ownership
+  create_symlink
+}
+
+# Run the setup function
+setup_lynis
+
+echo "Lynis installation and setup complete."
+echo "You can run Lynis using: sudo lynis audit system"
