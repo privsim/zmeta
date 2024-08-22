@@ -167,14 +167,14 @@ zinit wait lucid for \
 #Enable various
 [ -f $ZMETA/functions/various ] && source $ZMETA/functions/various
 
-export GPG_TTY="$(tty)"
-gpg-connect-agent updatestartuptty /bye > /dev/null
-export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-eval $(keychain --eval --agents ssh,gpg --inherit any -q )
+# export GPG_TTY="$(tty)"
+# gpg-connect-agent updatestartuptty /bye > /dev/null
+# export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+# eval $(keychain --eval --agents ssh,gpg --inherit any -q )
 
 eval "$(direnv hook zsh)"
-export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+#export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 
-if [ -f "/home/lclose/.config/fabric/fabric-bootstrap.inc" ]; then . "/home/lclose/.config/fabric/fabric-bootstrap.inc"; fi
+# if [ -f "/home/lclose/.config/fabric/fabric-bootstrap.inc" ]; then . "/home/lclose/.config/fabric/fabric-bootstrap.inc"; fi
 
