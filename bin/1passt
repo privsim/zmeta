@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+pipx run --spec textual python ~/.zmeta/bin/1pass_tui.py

@@ -39,3 +39,4 @@ if [ -e /etc/os-release ]; then
     skip_global_compinit=1
   fi
 fi
+. "$HOME/.cargo/env"

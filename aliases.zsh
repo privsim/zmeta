@@ -1,13 +1,15 @@
 #
 # aliases
 #
-
-
+alias k2cdk='./kube2cdk8s typescript -m true -f '
+alias kubectl='kubecolor'
 alias ea="cat /proc/sys/kernel/random/entropy_avail"
 alias 64AN='openssl rand -base64 48 | tr -d '+/=' | cut -c -64 | pbcopy'
 alias 64ANU='tr -dc 'A-Za-z0-9' < /dev/urandom | head -c64 | pbcopy'
 alias hashpass='python ~/.zmeta/bin/argon2_hashgen.py'
 alias 32AN="openssl rand -base64 32 | tr -dc 'a-zA-Z0-9&*()' | head -c 32 | pbcopy"
+alias gac='git add -A; git commit'
+
 
 # mask built-ins with better defaults
 alias cp='cp -i'
