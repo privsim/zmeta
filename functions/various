@@ -180,24 +180,34 @@ capture_docker_errors() {
     done
 }
 
-# display log errors of past 1 hr or past arg[n]
 log_errors() {
-    # Set default time to '1 hour ago' if no argument is provided
-    local time_arg="${1:-'1 hour ago'}"
+    # Set default time to '1h' if no argument is provided (1 hour)
+    local time_arg="${1:-1h}"
 
     # Detect the operating system
     if [[ "$OSTYPE" == "darwin"* ]]; then
-        # macOS
+        # macOS expects duration in '--last' format
+        # Convert '1h', '1d', etc. to a format accepted by macOS `log`
         sudo log show --predicate 'eventMessage contains "error"' --info --last "$time_arg"
     elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        # Linux
-        sudo journalctl --since="$time_arg" | grep "error"
-        # Alternatively, you can use dmesg if you want kernel messages:
-        # sudo dmesg | grep "error"
+        # Linux with journalctl expects a specific time, like '1 hour ago' or 'today'
+        # Adjust the time_arg to match acceptable formats for `journalctl`
+        if [[ "$time_arg" =~ ^[0-9]+[hm]$ ]]; then
+            # Convert '1h' or '1m' into 'X hour ago' or 'X minute ago' for journalctl
+            local time_prefix="${time_arg:0:-1}"
+            local time_unit="${time_arg: -1}"
+            if [[ "$time_unit" == "h" ]]; then
+                sudo journalctl --since="${time_prefix} hour ago" | grep "error"
+            elif [[ "$time_unit" == "m" ]]; then
+                sudo journalctl --since="${time_prefix} minute ago" | grep "error"
+            fi
+        else
+            # If a full date is passed or a correct argument like 'today' is provided
+            sudo journalctl --since="$time_arg" | grep "error"
+        fi
     else
         echo "Unsupported OS: $OSTYPE"
         return 1
     fi
 }
-
 
