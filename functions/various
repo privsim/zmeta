@@ -179,3 +179,25 @@ capture_docker_errors() {
         echo "----------------------------------"
     done
 }
+
+# display log errors of past 1 hr or past arg[n]
+log_errors() {
+    # Set default time to '1 hour ago' if no argument is provided
+    local time_arg="${1:-'1 hour ago'}"
+
+    # Detect the operating system
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS
+        sudo log show --predicate 'eventMessage contains "error"' --info --last "$time_arg"
+    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        # Linux
+        sudo journalctl --since="$time_arg" | grep "error"
+        # Alternatively, you can use dmesg if you want kernel messages:
+        # sudo dmesg | grep "error"
+    else
+        echo "Unsupported OS: $OSTYPE"
+        return 1
+    fi
+}
+
+
