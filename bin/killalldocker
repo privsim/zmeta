@@ -1,0 +1,140 @@
+#!/usr/bin/env bash
+
+# Set error handling
+set -euo pipefail
+
+echo "Starting complete Docker cleanup..."
+
+# Remove all Docker contexts except default
+echo "Removing all Docker contexts except default..."
+docker context ls --format '{{.Name}}' | grep -v 'default' | xargs -r docker context rm -f
+
+# Remove all Docker configs
+echo "Removing all Docker configs..."
+docker config ls -q | xargs -r docker config rm
+
+# Remove all Docker secrets
+echo "Removing all Docker secrets..."
+docker secret ls -q | xargs -r docker secret rm
+
+# Remove all Docker plugins
+echo "Removing all Docker plugins..."
+docker plugin ls -q | xargs -r docker plugin rm -f
+
+# Remove all Docker stacks
+echo "Removing all Docker stacks..."
+docker stack ls | awk 'NR>1 {print $1}' | xargs -r docker stack rm
+
+# Wait for stacks to be fully removed
+echo "Waiting for stacks to be removed..."
+sleep 10
+
+# Remove all services
+echo "Removing all Docker services..."
+docker service ls -q | xargs -r docker service rm
+
+# Leave swarm if node is part of one
+echo "Checking and leaving Docker swarm..."
+if docker info 2>/dev/null | grep -q "Swarm: active"; then
+    echo "Leaving swarm..."
+    docker swarm leave --force
+fi
+
+# Stop and remove all running containers
+echo "Stopping all containers..."
+docker ps -q | xargs -r docker stop
+
+# Stop and remove all containers (including stopped ones)
+echo "Removing all containers..."
+docker ps -a -q | xargs -r docker rm -f
+
+# Remove all container images
+echo "Removing all images..."
+docker images -a -q | xargs -r docker rmi -f
+
+# Remove all volumes
+echo "Removing all volumes..."
+docker volume ls -q | xargs -r docker volume rm -f
+
+# Remove all custom networks (cannot remove default networks)
+echo "Removing all custom networks..."
+docker network ls -q -f type=custom | xargs -r docker network rm
+
+# Remove Docker build cache
+echo "Clearing build cache..."
+docker builder prune -a -f
+
+# Clear buildx builders except default
+echo "Removing buildx builders..."
+docker buildx ls | grep -v "\* default" | awk 'NR>1 {print $1}' | xargs -r docker buildx rm
+
+# Remove all unused data (including dangling images, stopped containers, unused networks and build cache)
+echo "Removing all unused Docker data..."
+docker system prune -a -f --volumes
+
+# Clean containerd garbage collection (if using containerd)
+if command -v ctr >/dev/null 2>&1; then
+    echo "Running containerd garbage collection..."
+    ctr content garbage-collect
+fi
+
+# Clean overlay2 directory
+echo "Cleaning overlay2 directory..."
+sudo rm -rf /var/lib/docker/overlay2/* || true
+
+# Remove any leftover Docker temporary files
+echo "Cleaning temporary files..."
+sudo rm -rf /var/lib/docker/tmp/* || true
+
+# Clean logs
+echo "Cleaning Docker logs..."
+sudo sh -c 'truncate -s 0 /var/lib/docker/containers/*/*-json.log'
+
+# Final verification of remaining resources
+echo -e "\nVerifying cleanup:"
+
+echo -e "\nRemaining Docker contexts:"
+docker context ls
+
+echo -e "\nRemaining Docker configs:"
+docker config ls
+
+echo -e "\nRemaining Docker secrets:"
+docker secret ls
+
+echo -e "\nRemaining Docker plugins:"
+docker plugin ls
+
+echo -e "\nRemaining buildx builders:"
+docker buildx ls
+
+echo -e "\nRemaining Docker stacks:"
+docker stack ls
+
+echo -e "\nRemaining Docker services:"
+docker service ls
+
+echo -e "\nSwarm status:"
+docker info | grep -A1 "Swarm:"
+
+echo -e "\nRemaining containers:"
+docker ps -a
+
+echo -e "\nRemaining images:"
+docker images -a
+
+echo -e "\nRemaining volumes:"
+docker volume ls
+
+echo -e "\nRemaining networks:"
+docker network ls
+
+echo -e "\nRemaining build cache:"
+docker builder ls
+
+echo -e "\nDisk space usage:"
+docker system df
+
+# Optional: Display any remaining Docker-related processes
+echo -e "\nDocker-related processes still running:"
+ps aux | grep -i docker | grep -v grep
