@@ -1,70 +1,81 @@
 #!/bin/bash
 
-# Define variables
+# Constants
 LYNIS_DIR="$HOME/.lynis"
 LYNIS_REPO="https://github.com/CISOfy/lynis.git"
 SYMLINK_PATH="/usr/local/bin/lynis"
+WRAPPER_PATH="$HOME/.lynis/lynis_wrapper.sh"
 OS=$(uname -s)
+USER_GROUP="root:wheel" # Adjust for Linux if needed
 
-# Function to install prerequisites (git, etc.)
-install_prerequisites() {
-  if [[ "$OS" == "Linux" ]]; then
-    if command -v apt >/dev/null 2>&1; then
-      sudo apt update
-      sudo apt install -y git
-    else
-      echo "Unsupported Linux distribution. Please install Git manually."
-      exit 1
-    fi
-  elif [[ "$OS" == "Darwin" ]]; then
-    if ! command -v brew >/dev/null 2>&1; then
-      echo "Homebrew not found. Please install Homebrew and rerun this script."
-      exit 1
-    fi
-    brew install git
-  else
-    echo "Unsupported OS: $OS"
-    exit 1
+# Function to log messages
+log() {
+  echo "[INFO] $1"
+}
+
+# Function to log errors and exit
+error_exit() {
+  echo "[ERROR] $1"
+  exit 1
+}
+
+# Function to clean up old Lynis installation
+cleanup_old_lynis() {
+  log "Removing old Lynis installations (if any)..."
+  if [ -d "$LYNIS_DIR" ]; then
+    log "Found existing Lynis directory at $LYNIS_DIR. Removing it..."
+    rm -rf "$LYNIS_DIR" || error_exit "Failed to remove old Lynis directory"
+  fi
+  if [ -L "$SYMLINK_PATH" ]; then
+    log "Found existing Lynis symlink at $SYMLINK_PATH. Removing it..."
+    sudo rm "$SYMLINK_PATH" || error_exit "Failed to remove old Lynis symlink"
   fi
 }
 
 # Function to clone the Lynis repository
 clone_lynis_repo() {
-  if [ -d "$LYNIS_DIR" ]; then
-    echo "Lynis directory already exists. Pulling latest changes..."
-    git -C "$LYNIS_DIR" pull
-  else
-    echo "Cloning Lynis repository..."
-    git clone "$LYNIS_REPO" "$LYNIS_DIR"
-  fi
+  log "Cloning Lynis repository..."
+  git clone "$LYNIS_REPO" "$LYNIS_DIR" || error_exit "Failed to clone Lynis repository"
 }
 
 # Function to change ownership of the Lynis directory
 change_ownership() {
-  echo "Changing ownership of the Lynis directory to root..."
-  sudo chown -R root:wheel "$LYNIS_DIR"
-}
-
-# Function to create a symlink to the Lynis binary
-create_symlink() {
-  if [ -L "$SYMLINK_PATH" ]; then
-    echo "Symlink already exists at $SYMLINK_PATH"
-  else
-    echo "Creating symlink for Lynis..."
-    sudo ln -s "$LYNIS_DIR/lynis" "$SYMLINK_PATH"
+  if [ "$OS" != "Darwin" ]; then
+    USER_GROUP="root:root"
   fi
+  log "Changing ownership of Lynis directory to $USER_GROUP..."
+  sudo chown -R $USER_GROUP "$LYNIS_DIR" || error_exit "Failed to change ownership"
 }
 
-# Function to set up the environment for Lynis
+# Function to create a wrapper script for Lynis
+create_wrapper() {
+  log "Creating Lynis wrapper script..."
+  cat <<EOF > "$WRAPPER_PATH"
+#!/bin/bash
+cd "$LYNIS_DIR" || exit 1
+exec ./lynis "\$@"
+EOF
+  chmod +x "$WRAPPER_PATH" || error_exit "Failed to make wrapper executable"
+}
+
+# Function to create a symlink to the wrapper script
+create_symlink() {
+  log "Creating symlink for Lynis..."
+  sudo ln -s "$WRAPPER_PATH" "$SYMLINK_PATH" || error_exit "Failed to create symlink"
+}
+
+# Main setup function
 setup_lynis() {
-  install_prerequisites
+  log "Starting Lynis setup..."
+  cleanup_old_lynis
   clone_lynis_repo
   change_ownership
+  create_wrapper
   create_symlink
+  log "Lynis setup complete."
 }
 
-# Run the setup function
+# Run the setup
 setup_lynis
 
-echo "Lynis installation and setup complete."
-echo "You can run Lynis using: sudo lynis audit system"
+log "You can run Lynis using: sudo lynis audit system"
