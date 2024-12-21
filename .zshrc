@@ -109,7 +109,6 @@ zi light-mode for "$ZI_REPO"/zinit-annex-{bin-gem-node,binary-symlink,patch-dl,s
 
 #=== GITHUB BINARIES ==================================
 zi from'gh-r' lbin'!' nocompile for \
-  @jdx/mise            @aquaproj/aqua      \
   @dandavison/delta    @junegunn/fzf       \
   @koalaman/shellcheck @pemistahl/grex     \
   @melbahja/got        @r-darwish/topgrade \
@@ -117,9 +116,10 @@ zi from'gh-r' lbin'!' nocompile for \
   @sharkdp/bat         @sharkdp/vivid      \
   @sharkdp/hexyl       @sharkdp/pastel     \
   @alexellis/arkade    @helix-editor/helix \
-  @ClementTsang/bottom \
+  @ClementTsang/bottom @aquaproj/aqua      \
   @bonnefoa/kubectl-fzf \
-  lbin'!* -> jq'       @jqlang/jq        \
+  lbin'!* -> mise'     @jdx/mise           \
+  lbin'!* -> jq'       @jqlang/jq          \
   lbin'!* -> shfmt'    @mvdan/sh           \
   lbin'!**/nvim'       @neovim/neovim      \
   lbin'!**/rg'         @BurntSushi/ripgrep \
