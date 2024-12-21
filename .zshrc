@@ -118,7 +118,6 @@ zi from'gh-r' lbin'!' nocompile for \
   @alexellis/arkade    @helix-editor/helix \
   @ClementTsang/bottom @aquaproj/aqua      \
   @bonnefoa/kubectl-fzf \
-  lbin'!* -> mise'     @jdx/mise           \
   lbin'!* -> jq'       @jqlang/jq          \
   lbin'!* -> shfmt'    @mvdan/sh           \
   lbin'!**/nvim'       @neovim/neovim      \
