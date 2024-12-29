@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Define paths
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+VENV_DIR="$SCRIPT_DIR/venv"
+PYTHON="python3"
+
+# Check for Python 3
+if ! command -v $PYTHON &>/dev/null; then
+    echo "Error: Python 3 is not installed. Please install Python 3 to continue."
+    exit 1
+fi
+
+# Create or reuse the virtual environment
+if [ ! -d "$VENV_DIR" ]; then
+    echo "Creating virtual environment..."
+    $PYTHON -m venv "$VENV_DIR"
+fi
+
+# Activate the virtual environment
+source "$VENV_DIR/bin/activate"
+
+# Install necessary packages if not already installed
+if ! pip show playwright &>/dev/null; then
+    echo "Installing required packages..."
+    pip install --upgrade pip
+    pip install playwright
+
+    echo "Installing Playwright browsers..."
+    playwright install
+fi
+
+# Check arguments
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <URL> [output_file]"
+    deactivate
+    exit 1
+fi
+
+URL="$1"
+OUTPUT_FILE="${2:-conversation.txt}"
+
+# Run the Python script directly
+$PYTHON <<EOF
+from playwright.sync_api import sync_playwright
+import sys
+
+def fetch_openai_text_with_playwright(shared_url, output_file):
+    with sync_playwright() as p:
+        # Launch headless browser
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
+
+        print("Fetching content from OpenAI shared link...")
+        page.goto(shared_url)
+
+        print("Processing content to extract full conversation text...")
+        try:
+            # Wait for the page to load fully
+            page.wait_for_selector("div.prose")
+
+            # Extract all text content within the relevant conversation container
+            conversation_blocks = page.query_selector_all("div.prose > *")
+            conversation_text = "\\n\\n".join(block.inner_text() for block in conversation_blocks)
+
+            # Save the extracted text to the output file
+            with open(output_file, "w") as output:
+                output.write(conversation_text)
+
+            print(f"Conversation text saved to: {output_file}")
+        except Exception as e:
+            print(f"Error extracting conversation content: {e}")
+        finally:
+            browser.close()
+
+if __name__ == "__main__":
+    shared_url = "$URL"
+    output_file = "$OUTPUT_FILE"
+
+    fetch_openai_text_with_playwright(shared_url, output_file)
+EOF
+
+# Deactivate the virtual environment
+deactivate
+
+echo "Script completed successfully."
