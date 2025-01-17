@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# Generate UUID with development suffix
+UUID="$(uuidgen | tr '[:upper:]' '[:lower:]')-development"
+
+# Create secure note with generated secrets
+op item create "Secure Note" \
+  --title "$UUID" \
+  --vault "Infrastructure" \
+  --field "do_token[password]=$(openssl rand -base64 32)" \
+  --field "redis_password[password]=$(openssl rand -base64 32)" \
+  --field "postgres_password[password]=$(openssl rand -base64 32)" \
+  --field "grafana_password[password]=$(openssl rand -base64 32)"
+
+#
+## Digital Ocean Token
+#$( op read "op://Infrastructure/$UUID/do_token" )
+#
+## Redis Password
+#$( op read "op://Infrastructure/$UUID/redis_password" )
+#
+## Postgres Password
+#$( op read "op://Infrastructure/$UUID/postgres_password" )
+#
+## Grafana Password
+#$( op read "op://Infrastructure/$UUID/grafana_password" )
+

@@ -1,0 +1,75 @@
+#!/bin/bash
+
+# Function to print a section header
+print_section() {
+  echo -e "\n\033[1;34m=== $1 ===\033[0m"
+}
+
+# Check if a token is explicitly set in the environment
+if [ -n "$DIGITALOCEAN_ACCESS_TOKEN" ]; then
+  echo -e "Using token from environment variable: ${DIGITALOCEAN_ACCESS_TOKEN:0:4}..."
+  export DO_API_TOKEN="$DIGITALOCEAN_ACCESS_TOKEN"
+else
+  echo -e "No token set in the environment. Using logged-in session."
+fi
+
+# Test `doctl` authentication
+if ! doctl account get &>/dev/null; then
+  echo -e "\033[1;31mERROR: Not authenticated with doctl. Please log in or set the DIGITALOCEAN_ACCESS_TOKEN.\033[0m"
+  echo "To log in, run: doctl auth init"
+  exit 1
+fi
+
+# Start listing resources
+
+# Droplets
+print_section "Droplets"
+doctl compute droplet list --no-header || echo "Failed to list droplets (check permissions)."
+
+# Load Balancers
+print_section "Load Balancers"
+doctl compute load-balancer list --no-header || echo "Failed to list load balancers (check permissions)."
+
+# Floating IPs
+print_section "Floating IPs"
+if doctl compute floating-ip list --no-header > /dev/null 2>&1; then
+  doctl compute floating-ip list --no-header
+else
+  echo "No access to Floating IPs (check permissions)."
+fi
+
+# VPCs
+print_section "VPCs"
+if doctl vpcs list --no-header > /dev/null 2>&1; then
+  doctl vpcs list --no-header
+else
+  echo "Failed to list VPCs (check permissions or command availability)."
+fi
+
+# Volumes
+print_section "Volumes"
+doctl compute volume list --no-header || echo "Failed to list volumes (check permissions)."
+
+# Firewalls
+print_section "Firewalls"
+doctl compute firewall list --no-header || echo "Failed to list firewalls (check permissions)."
+
+# Domains
+print_section "Domains"
+doctl compute domain list --no-header || echo "Failed to list domains (check permissions)."
+
+# Kubernetes Clusters
+print_section "Kubernetes Clusters"
+doctl kubernetes cluster list --no-header || echo "Failed to list Kubernetes clusters (check permissions)."
+
+# Databases
+print_section "Databases"
+doctl databases list --no-header || echo "Failed to list databases (check permissions)."
+
+# App Platform Apps
+print_section "App Platform Apps"
+doctl apps list --no-header || echo "Failed to list App Platform Apps (check permissions)."
+
+# Spaces (Object Storage)
+print_section "Spaces"
+echo "DigitalOcean Spaces is managed via the S3-compatible API. Use a separate tool like aws-cli for Spaces."

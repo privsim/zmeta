@@ -40,6 +40,49 @@ else
   error "Unable to find 'zinit.zsh'" && return 1
 fi
 
+#=== HOSTS HANDLING =========================================
+if [[ -n "$ZMETA_PLATFORM" && "$ZMETA_PLATFORM" == "darwin-arm64" ]]; then
+    # Load immediate configurations
+    if (( ${#DARWIN_ARM64_CONFIGS} > 0 )); then
+        for key value in ${(kv)DARWIN_ARM64_CONFIGS}; do
+            zinit ice wait lucid id-as"platform-$key"
+            zinit load zdharma-continuum/null
+            eval "$value"
+        done
+    fi
+
+    if [[ -d "$ZMETA_ESSENCE_DIR" ]]; then
+        zinit ice wait"1" lucid id-as"essence-setup" \
+            atload"
+                # XDG setup
+                export XDG_CONFIG_HOME=\${HOME}/.config
+                export XDG_CACHE_HOME=\${HOME}/.cache
+                export XDG_DATA_HOME=\${HOME}/.local/share
+                export XDG_STATE_HOME=\${HOME}/.local/state
+                export XDG_RUNTIME_DIR=\${HOME}/.local/runtime
+                
+                mkdir -p \$XDG_CONFIG_HOME \$XDG_CACHE_HOME \
+                         \$XDG_DATA_HOME \$XDG_STATE_HOME \$XDG_RUNTIME_DIR
+                chmod 700 \$XDG_RUNTIME_DIR
+
+                # Only sync if essence directory exists and has contents
+                [[ -d \$ZMETA_ESSENCE_DIR ]] && [[ -n \"\$(ls -A \$ZMETA_ESSENCE_DIR)\" ]] && {
+                    rsync -av --backup \
+                          --exclude .git/ \
+                          --exclude *.bak \
+                          --exclude *.old \
+                          \$ZMETA_ESSENCE_DIR/ \$XDG_CONFIG_HOME/
+                }
+            "
+        zinit load zdharma-continuum/null
+    fi
+fi
+
+#=== ZSH MODULES ===========================================
+autoload -Uz zmv
+autoload -Uz zcalc
+autoload -Uz zed
+
 #=== STATIC ZSH BINARY =======================================
 zi for atpull"%atclone" depth"1" lucid nocompile nocompletions as"null" \
     atclone"./install -e no -d ~/.local" atinit"export PATH=$HOME/.local/bin:$PATH" \
@@ -122,6 +165,7 @@ zi from'gh-r' lbin'!' nocompile for \
   lbin'!* -> shfmt'    @mvdan/sh           \
   lbin'!**/nvim'       @neovim/neovim      \
   lbin'!**/rg'         @BurntSushi/ripgrep \
+  lbin'!* -> uv'       @astral-sh/uv       \
   lbin atinit"
     alias ll='exa -al';
     alias l='exa -blF';

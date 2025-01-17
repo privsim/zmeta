@@ -1,0 +1,11 @@
+curl -L -o ReloadConfiguration.spoon.zip https://github.com/Hammerspoon/Spoons/raw/master/Spoons/ReloadConfiguration.spoon.zip;unzip ReloadConfiguration.spoon.zip -d ~/.config/hammerspoon/Spoons/
+
+curl -L -o WindowHalfsAndThirds.spoon.zip https://github.com/Hammerspoon/Spoons/raw/master/Spoons/WindowHalfsAndThirds.spoon.zip;unzip WindowHalfsAndThirds.spoon.zip -d ~/.config/hammerspoon/Spoons/
+
+curl -L -o ClipboardTool.spoon.zip https://github.com/Hammerspoon/Spoons/raw/master/Spoons/ClipboardTool.spoon.zip;unzip ClipboardTool.spoon.zip -d ~/.config/hammerspoon/Spoons/
+
+curl -L -o HCalendar.spoon.zip https://github.com/Hammerspoon/Spoons/raw/master/Spoons/HCalendar.spoon.zip;unzip HCalendar.spoon.zip -d ~/.config/hammerspoon/Spoons/
+
+curl -L -o KSheet.spoon.zip https://github.com/Hammerspoon/Spoons/raw/master/Spoons/KSheet.spoon.zip;unzip KSheet.spoon.zip -d ~/.config/hammerspoon/Spoons/
+
+curl -L -o KSheet.spoon.zip https://github.com/Hammerspoon/Spoons/raw/master/Spoons/KSheet.spoon.zip;unzip KSheet.spoon.zip -d ~/.config/hammerspoon/Spoons/

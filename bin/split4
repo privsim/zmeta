@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# Check for input source
+if [ -t 0 ] && [ $# -eq 0 ]; then
+    echo "Usage: $0 [file] or pipe text via stdin"
+    exit 1
+fi
+
+# Default output directory
+output_dir="$HOME/tmp"
+
+# Read input from a file or stdin
+if [ $# -gt 0 ]; then
+    input=$(cat "$1")
+else
+    input=$(cat)
+fi
+
+# Exit if input is empty
+if [[ -z "$input" ]]; then
+    echo "Error: No input provided. Please provide a file or pipe text to the script."
+    exit 1
+fi
+
+# Process text into four roughly equal parts
+echo "$input" | awk -v parts=4 -v output_dir="$output_dir" '
+{
+    text = text $0 " "
+}
+END {
+    n = split(text, sentences, /[.!?] +/)
+    if (n == 0) {
+        print "Error: No sentences found in input." > "/dev/stderr"
+        exit 1
+    }
+    per_part = int(n / parts)
+    if (per_part == 0) per_part = 1 # Ensure at least one sentence per part
+    part = 1
+    for (i = 1; i <= n; i++) {
+        current = current sentences[i] "."
+        if ((i % per_part == 0 && part < parts) || i == n) {
+            filename = output_dir "/part" part ".txt"
+            print current > filename
+            close(filename)
+            current = ""
+            part++
+        }
+    }
+}'
+
+# Check if output was successful
+if [ $? -eq 0 ]; then
+    echo "Split text into $output_dir/part1.txt, $output_dir/part2.txt, $output_dir/part3.txt, and $output_dir/part4.txt"
+else
+    echo "An error occurred while splitting the text."
+fi

@@ -121,3 +121,4 @@ alias python='python3'
 alias m='mdcat'
 alias fast='speedtest'
 
+alias code2prompt='code2prompt --tokens '
