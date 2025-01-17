@@ -1,0 +1,49 @@
+TAP version 13
+1..47
+ok 1 load global aliases
+ok 2 load platform-specific aliases
+ok 3 hardware aliases override platform aliases
+ok 4 alias conflicts are logged
+ok 5 aliases are properly escaped
+ok 6 alias removal is handled
+ok 7 alias functions work correctly
+ok 8 conditional aliases load properly
+ok 9 alias file syntax is valid
+ok 10 aliases don't create infinite loops
+ok 11 cohere creates required directories
+ok 12 cohere sets correct permissions
+ok 13 cohere generates required files
+ok 14 cohere preserves existing configurations
+ok 15 cohere creates platform-specific files
+ok 16 cohere handles hardware-specific setup
+ok 17 cohere creates valid shell configurations
+ok 18 cohere creates necessary symlinks
+ok 19 cohere handles path conflicts
+ok 20 cohere generates idempotent configurations
+ok 21 ZMETA environment variable is set correctly
+ok 22 PATH includes zmeta bin directory
+ok 23 XDG directories are properly configured
+ok 24 PATH entries are unique
+ok 25 environment variables persist across shell sessions
+ok 26 local environment overrides are respected
+ok 27 environment cleanup on exit
+ok 28 path directories exist and are accessible
+ok 29 platform essence directory exists
+ok 30 copy hammerspoon config from essence
+ok 31 essence files maintain permissions
+ok 32 essence directory structure is preserved
+ok 33 handle missing essence directory gracefully
+ok 34 essence files don't overwrite existing files
+ok 35 essence directory contains only configuration files
+ok 36 essence files are valid configurations
+ok 37 detect hardware configuration by hostname
+ok 38 load hardware specific aliases
+ok 39 handle missing hardware config gracefully
+ok 40 hardware aliases don't conflict with global aliases
+ok 41 multiple hardware configs are isolated
+ok 42 hardware config permissions are correct
+ok 43 detect darwin-arm64 platform
+ok 44 detect linux-x86_64 platform
+ok 45 detect linux-aarch64 platform
+ok 46 fail gracefully for unsupported platform
+ok 47 core initialization runs before platform specific
