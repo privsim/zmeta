@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for serial in $(softhsm2-util --show-slots | grep "Serial number:" | awk '{print $3}'); do
+    softhsm2-util --delete-token --serial "$serial"
+done

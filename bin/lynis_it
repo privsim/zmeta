@@ -1,0 +1,149 @@
+#!/bin/bash
+
+# Constants
+LYNIS_DIR="$HOME/.lynis"
+LYNIS_REPO="https://github.com/CISOfy/lynis.git"
+SYMLINK_PATH="/usr/local/bin/lynis"
+WRAPPER_PATH="$LYNIS_DIR/lynis_wrapper.sh"
+OS=$(uname -s)
+USER_GROUP="root:root" # Default for Linux; overridden for macOS below
+
+# Function to log messages
+log() {
+  echo "[INFO] $1"
+}
+
+# Function to log errors and exit
+error_exit() {
+  echo "[ERROR] $1"
+  exit 1
+}
+
+# Function to check for sudo availability
+check_sudo() {
+  if command -v sudo >/dev/null; then
+    echo "sudo"
+  else
+    log "sudo not found; running commands directly as root."
+    echo ""
+  fi
+}
+
+# Function to detect the package manager
+detect_package_manager() {
+  if [ "$OS" == "Darwin" ]; then
+    if command -v brew >/dev/null; then
+      echo "brew"
+    else
+      error_exit "Homebrew is not installed. Install it first: https://brew.sh"
+    fi
+  elif command -v dnf >/dev/null; then
+    echo "dnf"
+  elif command -v apt >/dev/null; then
+    echo "apt"
+  elif command -v yum >/dev/null; then
+    echo "yum"
+  elif command -v zypper >/dev/null; then
+    echo "zypper"
+  else
+    error_exit "Unsupported package manager. Please install git manually."
+  fi
+}
+
+# Function to check and install dependencies
+install_dependencies() {
+  local pkg_manager
+  pkg_manager=$(detect_package_manager)
+  sudo_cmd=$(check_sudo)
+
+  log "Using package manager: $pkg_manager"
+  case $pkg_manager in
+    brew)
+      log "Installing Git with Homebrew (no sudo)..."
+      brew install git || error_exit "Failed to install git with Homebrew"
+      ;;
+    dnf)
+      $sudo_cmd dnf install -y git || error_exit "Failed to install git with dnf"
+      ;;
+    apt)
+      $sudo_cmd apt update && $sudo_cmd apt install -y git || error_exit "Failed to install git with apt"
+      ;;
+    yum)
+      $sudo_cmd yum install -y git || error_exit "Failed to install git with yum"
+      ;;
+    zypper)
+      $sudo_cmd zypper install -y git || error_exit "Failed to install git with zypper"
+      ;;
+    *)
+      error_exit "Unsupported package manager"
+      ;;
+  esac
+}
+
+# Function to clean up old Lynis installation
+cleanup_old_lynis() {
+  sudo_cmd=$(check_sudo)
+  log "Removing old Lynis installations (if any)..."
+  if [ -d "$LYNIS_DIR" ]; then
+    log "Found existing Lynis directory at $LYNIS_DIR. Removing it..."
+    $sudo_cmd rm -rf "$LYNIS_DIR" || error_exit "Failed to remove old Lynis directory"
+  fi
+  if [ -L "$SYMLINK_PATH" ]; then
+    log "Found existing Lynis symlink at $SYMLINK_PATH. Removing it..."
+    $sudo_cmd rm "$SYMLINK_PATH" || error_exit "Failed to remove old Lynis symlink"
+  fi
+}
+
+# Function to clone the Lynis repository
+clone_lynis_repo() {
+  log "Cloning Lynis repository..."
+  git clone "$LYNIS_REPO" "$LYNIS_DIR" || error_exit "Failed to clone Lynis repository"
+}
+
+# Function to create a wrapper script for Lynis
+create_wrapper() {
+  log "Creating Lynis wrapper script..."
+  cat <<EOF > "$WRAPPER_PATH"
+#!/bin/bash
+cd "$LYNIS_DIR" || exit 1
+exec ./lynis "\$@"
+EOF
+  chmod +x "$WRAPPER_PATH" || error_exit "Failed to make wrapper executable"
+}
+
+# Function to change ownership of the Lynis directory
+change_ownership() {
+  sudo_cmd=$(check_sudo)
+  log "Changing ownership of Lynis directory to $USER_GROUP..."
+  $sudo_cmd chown -R $USER_GROUP "$LYNIS_DIR" || error_exit "Failed to change ownership"
+}
+
+# Function to create a symlink to the wrapper script
+create_symlink() {
+  sudo_cmd=$(check_sudo)
+  log "Creating symlink for Lynis..."
+  $sudo_cmd ln -s "$WRAPPER_PATH" "$SYMLINK_PATH" || error_exit "Failed to create symlink"
+}
+
+# Main setup function
+setup_lynis() {
+  log "Starting Lynis setup..."
+
+  # Adjust user group for macOS
+  if [ "$OS" == "Darwin" ]; then
+    USER_GROUP="root:wheel"
+  fi
+
+  install_dependencies
+  cleanup_old_lynis   # Elevated permissions handled here
+  clone_lynis_repo
+  create_wrapper      # Wrapper created with user permissions
+  change_ownership    # Ownership adjusted after wrapper creation
+  create_symlink      # Elevated permissions for symlink creation
+  log "Lynis setup complete."
+}
+
+# Run the setup
+setup_lynis
+
+log "You can run Lynis using: sudo lynis audit system"

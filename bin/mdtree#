@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# Check if the 'tree' command is installed
+if ! command -v tree &> /dev/null
+then
+    echo "'tree' command not found. Please install 'tree' first."
+    exit 1
+fi
+
+# Check if the 'mdcat' command is installed
+if ! command -v mdcat &> /dev/null
+then
+    echo "'mdcat' command not found. Please install 'mdcat' first."
+    exit 1
+fi
+
+# Scan the repository and list all README.md files with their paths
+echo "Scanning repository for README.md files..."
+
+# Use tree to find README.md files and store their paths in an array
+readme_files=($(tree -f -i -P 'README.md' | grep 'README.md'))
+
+# Check if any README.md files were found
+if [ ${#readme_files[@]} -eq 0 ]; then
+    echo "No README.md files found in the repository."
+    exit 0
+fi
+
+# Display the number of README.md files found
+echo "Found ${#readme_files[@]} README.md files."
+
+# Display the list of README.md files with index numbers
+echo "List of README.md files:"
+for i in "${!readme_files[@]}"; do
+    echo "$i: ${readme_files[$i]}"
+done
+
+# Prompt the user to select a README.md file by index
+while true; do
+    read -p "Enter the index number of the README.md file you want to view (or 'q' to quit): " index
+    if [ "$index" == "q" ]; then
+        echo "Exiting."
+        break
+    elif [[ "$index" =~ ^[0-9]+$ ]] && [ "$index" -ge 0 ] && [ "$index" -lt ${#readme_files[@]} ]; then
+        # Display the selected README.md file using mdcat
+        echo "Displaying contents of: ${readme_files[$index]}"
+        mdcat "${readme_files[$index]}"
+        echo "----------------------------------------"
+    else
+        echo "Invalid index. Please enter a valid number."
+    fi
+done

@@ -1,0 +1,8 @@
+alias kit='batcat -pp'
+alias cat='batcat'
+alias open='xdg-open'
+alias pbcopy='xsel --clipboard --input'
+alias pbpaste='xsel --clipboard --output'
+alias wtf='sudo tail -f /var/log/syslog'
+alias status-all='sudo systemctl list-unit-files'
+alias status='sudo systemctl status '

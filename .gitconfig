@@ -1,0 +1,43 @@
+[core]
+    repositoryformatversion = 0
+    filemode = true
+    bare = false
+    logallrefupdates = true
+    ignorecase = true
+    precomposeunicode = true
+
+[user]
+    # These will be replaced by global values unless explicitly set
+    useConfigOnly = true
+
+[init]
+    defaultBranch = master
+
+[status]
+    showUntrackedFiles = all
+
+[pull]
+    rebase = true
+
+[push]
+    default = current
+    followTags = true
+
+[fetch]
+    prune = true
+
+[diff]
+    colorMoved = zebra
+
+[merge]
+    conflictstyle = diff3
+
+[color]
+    ui = auto
+
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+

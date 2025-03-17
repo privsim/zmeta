@@ -1,0 +1,81 @@
+#!/usr/bin/env zsh
+
+cohere() {
+        typeset zmeta="${ZMETA:-$HOME/.zmeta}"
+        typeset -a platforms=(
+            darwin-arm64
+            linux-aarch64
+            linux-x86_64
+        )
+        
+        # Hardware names - add your machines here
+        typeset -a hardware_names=(
+            m1
+            m3
+            psii
+            opt
+            obs
+            nzt
+            nztsiou
+            atlas
+            lake
+            epi
+        )
+ 
+        mkdir -p "$zmeta"/{hosts/{hardware,platforms/_core},bin}
+
+        # Platform initialization
+        cd "$zmeta/hosts/platforms" || return 1
+        for platform in $platforms; do
+            mkdir -p "$platform/essence"
+            
+            [[ ! -f "$platform/init.zsh" ]] && {
+                echo "source \"\${ZMETA}/hosts/platforms/_core/init.zsh\"" > "$platform/init.zsh"
+                echo "\n# Platform-specific configuration for $platform\n" >> "$platform/init.zsh"
+            }
+        done
+
+        [[ ! -f "_core/init.zsh" ]] && {
+            cat > "_core/init.zsh" << 'EOL'
+function {
+    typeset -g -U path
+    typeset platform_dir="${ZMETA}/hosts/platforms/${$(uname -s):l}-$(uname -m)"
+    typeset essence_dir="${platform_dir}/essence"
+
+    if [[ -d "$essence_dir" ]]; then
+        command mkdir -p "${HOME}/.config"
+        command cp -r "${essence_dir}/"* "${HOME}/.config/"
+    fi
+}
+EOL
+        }
+
+        # Hardware initialization - just creates directories and aliases files
+        cd "$zmeta/hosts/hardware" || return 1
+        for machine in $hardware_names; do
+            mkdir -p "$machine"
+            [[ ! -f "$machine/aliases.zsh" ]] && {
+                echo "# Hardware-specific aliases for $machine" > "$machine/aliases.zsh"
+            }
+        done
+
+        # Auto-detect current hostname
+        local current_host=$(hostname)
+        if [[ ! -d "$zmeta/hosts/hardware/$current_host" ]]; then
+            echo "Notice: Creating config directory for current host: $current_host"
+            mkdir -p "$zmeta/hosts/hardware/$current_host"
+            echo "# Hardware-specific aliases for $current_host" > "$zmeta/hosts/hardware/$current_host/aliases.zsh"
+        fi
+
+        echo "✓ zmeta structure coherent"
+        tree "$zmeta/hosts"
+}
+
+# More reliable way to detect if script is being sourced
+if [[ $ZSH_EVAL_CONTEXT =~ :file$ ]]; then
+    # Script is being sourced
+    return 0
+else
+    # Script is being executed
+    cohere "$@"
+fi

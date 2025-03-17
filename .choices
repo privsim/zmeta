@@ -1,0 +1,94 @@
+echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/$USER
+
+read -p "Enter file name pattern: (*.wild* works): " file_pattern && shasum -a 256 --check --ignore-missing <(cat $file_pattern) && echo "Checksum verification succeeded."
+
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow ssh
+sudo ufw enable
+sudo ufw status
+ss -ltn
+ip addr show $(ip route | awk '/default/ { print $5 }') | grep "inet" | head -n 1 | awk '/inet/ {print $2}' | cut -d'/' -f1
+sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -deactivate -configure -access -off
+echo "podname: ";read VAR2;echo "namespace: "; read VAR3; kubectl delete pod --grace-period=0 --force --namespace $VAR3 $VAR2
+sudo systemsetup -getremotelogin
+sudo systemsetup -f -setremotelogin on
+sudo systemsetup -f -setremotelogin off
+echo "secret name"; read VAR2; echo "password"; echo "namespace"; read VAR3; read VAR4;  kubectl create secret generic $VAR2  --from-literal='password=$VAR3' --namespace $VAR4
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate off
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --add /opt/homebrew/bin/mosh
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --unblockapp /opt/homebrew/bin/mosh
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
+read PORT; sudo lsof -n -i4TCP:$PORT | grep LISTEN
+sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.ftp-proxy.plist
+sudo launchctl unload /System/Library/LaunchDaemons/com.apple.mDNSResponder.plist
+sudo launchctl unload /System/Library/LaunchDaemons/com.apple.mDNSResponderHelper.plist
+diskutil list
+setkubes.sh
+head -c32 /dev/urandom | base64
+git config --global -l | >&1
+echo "enter keyname"; read KEY; /opt/homebrew/Cellar/openssh/9.0p1_1/bin/ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/$KEY -C "openssh9=<$KEY"
+sudo launchctl load /Library/LaunchDaemons/org.ntop.ntopng.plist
+sudo launchctl unload /Library/LaunchDaemons/org.ntop.ntopng.plist
+
+sudo ssh -L 5901:localhost:5901 ubuntu@10.0.1.214
+
+
+read VAR22;   sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -clientopts -setvnclegacy -vnclegacy yes -clientopts -setvncpw -vncpw $VAR22 -restart -agent -privs -all
+
+sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -deactivate -configure -access -off
+
+read VAR1; tmux new -s $VAR1
+
+proxmark3 /dev/tty.usbmodemiceman1
+
+echo "podname: ";read VAR2;echo "namespace: "; read VAR3; kubectl delete pod --grace-period=0 --force --namespace $VAR3 $VAR2
+
+
+ssh ubuntu@10.0.1.203
+
+scp ubuntu@10.0.1.203:/etc/rancher/k3s/k3s.yaml ~/.kube/config
+
+sudo systemsetup -getremotelogin
+
+sudo systemsetup -f -setremotelogin on
+
+sudo systemsetup -f -setremotelogin off
+
+echo "secret name"; read VAR2; echo "password"; echo "namespace"; read VAR3; read VAR4;  kubectl create secret generic $VAR2  --from-literal='password=$VAR3' --namespace $VAR4
+
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate off
+
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --add /opt/homebrew/Cellar/mosh/1.3.2_16/bin/mosh
+
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --unblockapp /opt/homebrew/Cellar/mosh/1.3.2_16/bin/mosh
+
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
+
+read PORT; sudo lsof -n -i4TCP:$PORT | grep LISTEN
+
+sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.ftp-proxy.plist
+sudo launchctl unload /System/Library/LaunchDaemons/com.apple.mDNSResponder.plist
+sudo launchctl unload /System/Library/LaunchDaemons/com.apple.mDNSResponderHelper.plist
+
+sudo lsof -n -i4TCP
+
+znap fpath _kubectl 'kubectl completion  zsh'
+znap fpath _rustup  'rustup  completions zsh'
+znap fpath _cargo   'rustup  completions zsh cargo'
+
+git clone https://github.com/tmux-plugins/tpm $ZMETA/tmux/plugins/tpm
+
+
+alias k=kubectl
+source <(kubectl completion zsh | sed 's/kubectl/k/g')
+
+echo 'name of commaand to generate completion';read COMMAND; $COMMAND completion zsh > ~/.local/share/zsh/zinit/completions/_$COMMAND;exec zsh
+
+echo 'email address of keys fingerprint: ';read IDENT;gpg --list-secret-keys --keyid-format long $IDENT | grep "Key fingerprint" | cut -d= -f2 | tr -d ' '

@@ -1,0 +1,23 @@
+#!/bin/sh
+
+echo "### Checking listening ports using netstat ###"
+# Using netstat to display listening ports
+netstat -tuln | grep -E '^(tcp|udp)'
+
+echo ""
+echo "### Checking listening ports using ss ###"
+# Using ss to display listening ports (if available)
+if command -v ss > /dev/null 2>&1; then
+  ss -tuln
+else
+  echo "ss command not found, skipping..."
+fi
+
+echo ""
+echo "### Checking listening ports using lsof ###"
+# Using lsof to display listening ports (if available)
+if command -v lsof > /dev/null 2>&1; then
+  lsof -i -P -n | grep LISTEN
+else
+  echo "lsof command not found, skipping..."
+fi

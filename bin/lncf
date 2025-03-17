@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Define the directory to explore
+directory=${1:-.}
+
+# Maximum number of lines to display from each file
+max_lines=${2:-10}
+
+# Regex pattern for file names
+pattern=${3:-'^Task'}
+
+# Function to display the tree structure and file contents
+display_tree() {
+    local dir=$1
+
+    # Print the directory name
+    echo "$(basename "$dir")/"
+
+    # Find files matching the regex pattern using find and awk
+    find "$dir" -type f | awk -v pat="$pattern" '$0 ~ pat' | while read -r entry; do
+        # Print the file name
+        echo "  $(basename "$entry")"
+        # Print the first n lines of the file
+        head -n "$max_lines" "$entry" | sed 's/^/    /'
+    done
+}
+
+# Call the display_tree function with the specified directory
+display_tree "$directory"

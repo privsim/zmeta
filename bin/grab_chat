@@ -1,0 +1,152 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Define paths
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+VENV_DIR="$SCRIPT_DIR/venv"
+PYTHON="python3"
+
+# Check for Python 3
+if ! command -v $PYTHON &>/dev/null; then
+    echo "Error: Python 3 is not installed. Please install Python 3 to continue."
+    exit 1
+fi
+
+# Create or reuse the virtual environment
+if [ ! -d "$VENV_DIR" ]; then
+    echo "Creating virtual environment..."
+    $PYTHON -m venv "$VENV_DIR"
+fi
+
+# Activate the virtual environment
+source "$VENV_DIR/bin/activate"
+
+# Install necessary packages if not already installed
+if ! pip show playwright &>/dev/null; then
+    echo "Installing required packages..."
+    pip install --upgrade pip
+    pip install playwright
+
+    echo "Installing Playwright browsers..."
+    playwright install
+fi
+
+# Check arguments
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <URL> [output_file]"
+    deactivate
+    exit 1
+fi
+
+URL="$1"
+OUTPUT_FILE="${2:-conversation.txt}"
+
+# Run the Python script directly
+PYTHON <<EOF
+from playwright.sync_api import sync_playwright, TimeoutError
+import time
+
+def extract_perplexity_content(page):
+    try:
+        print("Bypassing initial checks...")
+        page.wait_for_load_state('networkidle', timeout=60000)
+        page.wait_for_load_state('domcontentloaded')
+        
+        selectors = [
+            'div[class*="w-full text-token-text-primary"]',
+            'div[class*="whitespace-pre-wrap break-words"]',
+            'div[class*="flex flex-col gap"]'
+        ]
+        
+        content = []
+        for selector in selectors:
+            try:
+                elements = page.query_selector_all(selector)
+                for elem in elements:
+                    text = elem.evaluate('el => el.textContent')
+                    if text and len(text.strip()) > 20:
+                        content.append(text.strip())
+            except Exception as e:
+                print(f"Selector {selector} failed: {e}")
+                continue
+        
+        if not content:
+            print("No content found with primary selectors, trying backup method...")
+            page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+            time.sleep(2)
+            
+            elements = page.evaluate("""() => {
+                return Array.from(document.querySelectorAll('div'))
+                    .filter(el => el.textContent.length > 100)
+                    .map(el => el.textContent);
+            }""")
+            
+            content = [text for text in elements if text.strip()]
+        
+        return '\n\n'.join(content)
+    except Exception as e:
+        print(f"Error in extract_perplexity_content: {e}")
+        raise
+
+def extract_openai_content(page):
+    page.wait_for_selector('div.prose', timeout=30000)
+    elements = page.query_selector_all('div.prose > *')
+    return '\n\n'.join(elem.inner_text() for elem in elements if elem.inner_text().strip())
+
+def fetch_conversation_text(shared_url, output_file):
+    with sync_playwright() as p:
+        print(f"Launching browser for {shared_url}")
+        browser = p.chromium.launch(
+            headless=True,
+        )
+        
+        context = browser.new_context(
+            viewport={'width': 1920, 'height': 1080},
+            user_agent='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        )
+        
+        page = context.new_page()
+        page.set_default_timeout(60000)
+        
+        try:
+            print("Navigating to page...")
+            page.goto(shared_url, wait_until='commit')
+            
+            if 'perplexity.ai' in shared_url:
+                print("Detected Perplexity.ai URL")
+                conversation_text = extract_perplexity_content(page)
+            elif 'openai.com' in shared_url:
+                print("Detected OpenAI URL")
+                conversation_text = extract_openai_content(page)
+            else:
+                raise ValueError("Unsupported URL type")
+            
+            if not conversation_text.strip():
+                raise ValueError("No content extracted")
+
+            print("Writing output file...")
+            with open(output_file, 'w', encoding='utf-8') as output:
+                output.write(conversation_text)
+                
+            print(f"Successfully saved conversation to: {output_file}")
+            
+        except Exception as e:
+            print(f"Error: {e}")
+            print("Attempting to save page source for debugging...")
+            with open("debug_page_source.html", "w", encoding='utf-8') as f:
+                f.write(page.content())
+            raise
+        finally:
+            browser.close()
+
+if __name__ == "__main__":
+    shared_url = "$URL"
+    output_file = "$OUTPUT_FILE"
+    fetch_conversation_text(shared_url, output_file)
+EOF
+
+# Deactivate the virtual environment
+deactivate
+
+echo "Script completed successfully."

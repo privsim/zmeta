@@ -1,0 +1,8 @@
+alias cat='bat '
+alias kit='bat -pp'
+alias status-all='sudo launchctl list'
+alias status='sudo launchctl print'
+alias wtf='sudo tail -f /var/log/system.log'
+alias kwtf='sudo tail -f /var/log/kernel.log'
+alias srm='rm -P '
+alias source-prompt='open /Users/lclose/.zmeta/bin/your-source-to-prompt.html'

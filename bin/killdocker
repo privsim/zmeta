@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+# Stop all running containers
+docker stop $(docker ps -a -q)
+
+# Remove all containers
+docker rm $(docker ps -a -q)
+
+# Remove all volumes
+docker volume prune -f
+
+# Remove all networks
+docker network prune -f
+
+# Remove all images
+docker rmi -f $(docker images -a -q)
+
+# Remove all build cache
+docker builder prune -a -f
+
+# Remove all unused data
+docker system prune -a -f --volumes
+
+# Checking remaining resources (should be empty)
+echo "Remaining containers:"
+docker ps -a
+
+echo "Remaining images:"
+docker images -a
+
+echo "Remaining volumes:"
+docker volume ls
+
+echo "Remaining networks:"
+docker network ls

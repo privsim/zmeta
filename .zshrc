@@ -1,0 +1,240 @@
+#!/usr/bin/env zsh
+
+#=== HELPER METHODS ===================================
+function error() { print -P "%F{red}[ERROR]%f: %F{yellow}$1%f" && return 1 }
+function info() { print -P "%F{blue}[INFO]%f: %F{cyan}$1%f"; }
+
+#=== ZINIT ============================================
+typeset -gAH ZINIT
+ZINIT[HOME_DIR]=$HOME/.local/share/zsh/zinit
+ZPFX=$ZINIT[HOME_DIR]/zpfx
+ZINIT[BIN_DIR]=$ZINIT[HOME_DIR]/zinit.git
+ZINIT[OPTIMIZE_OUT_DISK_ACCESSES]=1
+ZINIT[COMPLETIONS_DIR]=$ZINIT[HOME_DIR]/completions
+ZINIT[SNIPPETS_DIR]=$ZINIT[HOME_DIR]/snippets
+ZINIT[ZCOMPDUMP_PATH]=$ZINIT[HOME_DIR]/zcompdump
+ZINIT[PLUGINS_DIR]=$ZINIT[HOME_DIR]/plugins
+ZI_REPO='zdharma-continuum'
+GH_RAW_URL='https://raw.githubusercontent.com'
+export ZMETA=$HOME/.zmeta
+
+if [[ ! -e $ZINIT[BIN_DIR] ]]; then
+  info 'Downloading zinit' \
+  && command mkdir -pv $ZINIT[HOME_DIR] \
+  && command git clone \
+    https://github.com/$ZI_REPO/zinit.git \
+    $ZINIT[BIN_DIR] \
+  || error 'Failed to clone zinit repository' \
+  && info 'Setting up zinit' \
+  && command chmod g-rwX $ZINIT[HOME_DIR] \
+  && zcompile $ZINIT[BIN_DIR]/zinit.zsh \
+  && info 'Successfully installed zinit'
+fi
+
+if [[ -e $ZINIT[BIN_DIR]/zinit.zsh ]]; then
+  source $ZINIT[BIN_DIR]/zinit.zsh \
+    && autoload -Uz _zinit \
+    && (( ${+_comps} )) \
+    && _comps[zinit]=_zinit
+else
+  error "Unable to find 'zinit.zsh'" && return 1
+fi
+
+#=== HOSTS HANDLING =========================================
+if [[ -n "$ZMETA_PLATFORM" && "$ZMETA_PLATFORM" == "darwin-arm64" ]]; then
+    # Load immediate configurations
+    if (( ${#DARWIN_ARM64_CONFIGS} > 0 )); then
+        for key value in ${(kv)DARWIN_ARM64_CONFIGS}; do
+            zinit ice wait lucid id-as"platform-$key"
+            zinit load zdharma-continuum/null
+            eval "$value"
+        done
+    fi
+
+    if [[ -d "$ZMETA_ESSENCE_DIR" ]]; then
+        zinit ice wait"1" lucid id-as"essence-setup" \
+            atload"
+                # XDG setup
+                export XDG_CONFIG_HOME=\${HOME}/.config
+                export XDG_CACHE_HOME=\${HOME}/.cache
+                export XDG_DATA_HOME=\${HOME}/.local/share
+                export XDG_STATE_HOME=\${HOME}/.local/state
+                export XDG_RUNTIME_DIR=\${HOME}/.local/runtime
+                
+                mkdir -p \$XDG_CONFIG_HOME \$XDG_CACHE_HOME \
+                         \$XDG_DATA_HOME \$XDG_STATE_HOME \$XDG_RUNTIME_DIR
+                chmod 700 \$XDG_RUNTIME_DIR
+
+                # Only sync if essence directory exists and has contents
+                [[ -d \$ZMETA_ESSENCE_DIR ]] && [[ -n \"\$(ls -A \$ZMETA_ESSENCE_DIR)\" ]] && {
+                    rsync -av --backup \
+                          --exclude .git/ \
+                          --exclude *.bak \
+                          --exclude *.old \
+                          \$ZMETA_ESSENCE_DIR/ \$XDG_CONFIG_HOME/
+                }
+            "
+        zinit load zdharma-continuum/null
+    fi
+fi
+
+#=== ZSH MODULES ===========================================
+autoload -Uz zmv
+autoload -Uz zcalc
+autoload -Uz zed
+
+#=== STATIC ZSH BINARY =======================================
+zi for atpull"%atclone" depth"1" lucid nocompile nocompletions as"null" \
+    atclone"./install -e no -d ~/.local" atinit"export PATH=$HOME/.local/bin:$PATH" \
+  @romkatv/zsh-bin
+
+#=== OH-MY-ZSH & PREZTO PLUGINS =======================
+zi for is-snippet \
+  OMZL::{clipboard,compfix,completion,git,grep,key-bindings}.zsh \
+  OMZP::brew \
+  PZT::modules/{history,rsync}
+
+#=== COMPLETIONS ======================================
+zi as'completion' for \
+  OMZP::golang/_golang \
+  OMZP::pip/_pip \
+  OMZP::terraform/_terraform \
+  OMZP::vagrant/_vagrant
+
+#=== PLUGINS ==========================================
+zi for \
+  OMZP::kubectl/kubectl.plugin.zsh \
+  OMZP::kubectx/kubectx.plugin.zsh \
+  OMZP::minikube/minikube.plugin.zsh \
+  OMZP::1password/1password.plugin.zsh \
+  OMZP::bun/bun.plugin.zsh \
+  OMZP::opentofu/opentofu.plugin.zsh
+
+#=== ADDITIONAL COMPLETIONS ===========================
+local GH_RAW_URL='https://raw.githubusercontent.com'
+install_completion() {
+  zinit for as'completion' nocompile id-as"$1" is-snippet "$GH_RAW_URL/$2"
+}
+install_completion 'brew-completion/_brew'     'Homebrew/brew/master/completions/zsh/_brew'
+install_completion 'docker-completion/_docker' 'docker/cli/master/contrib/completion/zsh/_docker'
+install_completion 'exa-completion/_exa'       'ogham/exa/master/completions/zsh/_exa'
+install_completion 'fd-completion/_fd'         'sharkdp/fd/master/contrib/completion/_fd'
+install_completion 'fzf-completion/_fzf'       'junegunn/fzf/master/shell/completion.zsh'
+install_completion 'git-completion/_git'       'git/git/master/contrib/completion/git-completion.zsh'
+install_completion 'kubectx-completion/_kubectx' 'ahmetb/kubectx/master/completion/_kubectx.zsh'
+install_completion 'kubens-completion/_kubens'  'ahmetb/kubectx/master/completion/_kubens.zsh'
+install_completion 'kubectl-completion/_kubectl' 'ohmyzsh/ohmyzsh/master/plugins/kubectl/kubectl.plugin.zsh'
+
+#=== PROMPT ===========================================
+zi light-mode for \
+  compile'(pure|async).zsh' multisrc'(pure|async).zsh' atinit"
+    PURE_GIT_DOWN_ARROW='↓'; PURE_GIT_UP_ARROW='↑'
+    PURE_PROMPT_SYMBOL='𝛀𝚨☉☈'; PURE_PROMPT_VICMD_SYMBOL='𝚨𝛀☉☈'
+    zstyle ':prompt:pure:git:action' color 'yellow'
+    zstyle ':prompt:pure:git:branch' color 'blue'
+    zstyle ':prompt:pure:git:dirty' color 'red'
+    zstyle ':prompt:pure:path' color 'cyan'
+    zstyle ':prompt:pure:prompt:success' color 'green'" \
+  sindresorhus/pure
+
+#=== zsh-vim-mode cursor configuration ================
+MODE_CURSOR_VICMD="green block";              MODE_CURSOR_VIINS="#20d08a blinking bar"
+MODE_INDICATOR_REPLACE='%F{9}%F{1}REPLACE%f'; MODE_INDICATOR_VISUAL='%F{12}%F{4}VISUAL%f'
+MODE_INDICATOR_VIINS='%F{15}%F{8}INSERT%f';   MODE_INDICATOR_VICMD='%F{10}%F{2}NORMAL%f'
+MODE_INDICATOR_VLINE='%F{12}%F{4}V-LINE%f';   MODE_CURSOR_SEARCH="#ff00ff blinking underline"
+setopt PROMPT_SUBST;  export KEYTIMEOUT=1
+export LANG=en_US.UTF-8; export LC_ALL="en_US.UTF-8"
+export LC_COLLATE='C' export LESS='-RMs'; export PAGER=less;       export VISUAL=vi
+RPS1='${MODE_INDICATOR_PROMPT} ${vcs_info_msg_0_}'
+
+#=== ANNEXES ==========================================
+zi light-mode for "$ZI_REPO"/zinit-annex-{bin-gem-node,binary-symlink,patch-dl,submods}
+
+#=== GITHUB BINARIES ==================================
+zi from'gh-r' lbin'!' nocompile for \
+  @dandavison/delta    @junegunn/fzf       \
+  @koalaman/shellcheck @pemistahl/grex     \
+  @melbahja/got        @r-darwish/topgrade \
+  @sharkdp/fd          @sharkdp/hyperfine  \
+  @sharkdp/bat         @sharkdp/vivid      \
+  @sharkdp/hexyl       @sharkdp/pastel     \
+  @alexellis/arkade    @helix-editor/helix \
+  @ClementTsang/bottom @aquaproj/aqua      \
+  @bonnefoa/kubectl-fzf \
+  lbin'!* -> jq'       @jqlang/jq          \
+  lbin'!* -> shfmt'    @mvdan/sh           \
+  lbin'!**/nvim'       @neovim/neovim      \
+  lbin'!**/rg'         @BurntSushi/ripgrep \
+  lbin'!* -> uv'       @astral-sh/uv       \
+  lbin atinit"
+    alias ll='exa -al';
+    alias l='exa -blF';
+    alias la='exa -abghilmu';
+    alias ls='exa --git --group-directories-first'" \
+  @ogham/exa
+
+zi as'command' light-mode for \
+  pick'revolver' @molovo/revolver \
+  pick'zunit' atclone'./build.zsh' @zunit-zsh/zunit
+
+#=== COMPILED PROGRAMS ================================
+zi lucid make'PREFIX=$PWD install' nocompile for \
+  lbin'!**/tree' Old-Man-Programmer/tree \
+  lbin'!**/zsd' $ZI_REPO/zshelldoc
+
+#=== PYTHON ===========================================
+function _pip_completion {
+  local words cword; read -Ac words; read -cn cword
+  reply=(
+    $(
+      COMP_WORDS="$words[*]"; COMP_CWORD=$(( cword-1 )) \
+      PIP_AUTO_COMPLETE=1 $words[1] 2>/dev/null
+    )
+  )
+}; compctl -K _pip_completion pip3
+
+#=== MISC. ============================================
+zi light-mode for \
+  atinit"bindkey -M vicmd '^e' edit-command-line" compile'zsh-vim-mode*.zsh' \
+  softmoth/zsh-vim-mode \
+  svn submods'zsh-users/zsh-history-substring-search -> external' \
+  zsh-users/zsh-history-substring-search \
+  atpull'zinit creinstall -q .' blockf \
+  zsh-users/zsh-completions \
+  atload'_zsh_autosuggest_start' \
+  atinit"
+    ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=50
+    bindkey '^_' autosuggest-execute
+    bindkey '^ ' autosuggest-accept" \
+  zsh-users/zsh-autosuggestions \
+  atclone'(){local f;cd -q →*;for f (*~*.zwc){zcompile -Uz -- ${f}};}' \
+  atload'FAST_HIGHLIGHT[chroma-man]=' atpull'%atclone' \
+  compile'.*fast*~*.zwc' nocompletions \
+  $ZI_REPO/fast-syntax-highlighting
+
+zi for atload'
+    zicompinit; zicdreplay
+    _zsh_highlight_bind_widgets
+    _zsh_autosuggest_bind_widgets' \
+  as'null' id-as'zinit/cleanup' lucid nocd wait \
+  $ZI_REPO/null
+
+#=== LS_COLORS ========================================
+export LS_COLORS="$(vivid generate snazzy)"
+
+#=== CUSTOM CONFIGURATIONS ============================
+# If we gotta duck, let's get it out of the way first thing
+[ -f "$ZMETA/ascii/ducky.txt" ] && fastfetch --logo-type file -l "/Users/lclose/.zmeta/ascii/ducky.txt" --structure logo --logo-color-1 "2"
+[ -f "$ZMETA/aliases.zsh" ] && source "$ZMETA/aliases.zsh"
+[ -f "$ZMETA/aliases-$(uname).zsh" ] && source "$ZMETA/aliases-$(uname).zsh"
+[ -f "$ZMETA/functions/p" ] && source "$ZMETA/functions/p"
+[ -f "$ZMETA/functions/various" ] && source "$ZMETA/functions/various"
+
+# Initialize direnv
+eval "$(direnv hook zsh)"
+
+# NVM Configuration
+export NVM_DIR="$HOME/.config/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+
+  #eval "$(conda "shell.$(basename "${SHELL}")" hook)"

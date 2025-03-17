@@ -1,0 +1,19 @@
+{
+  "framework": "bats",
+  "tests": [
+    {
+      "name": "Test execution",
+      "passed": false,
+      "output": [
+        "ERROR: Test file \"/Users/lclose/.zmeta/exa-hammerspoon-tests\" does not exist.",
+        "1..1",
+        "not ok 1 bats-gather-tests"
+      ]
+    }
+  ],
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1
+  }
+}

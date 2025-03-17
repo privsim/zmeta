@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+#!/usr/bin/env -S bash -e
+
+filename=".choices"
+
+# see if there's a '-f filename'
+if [[ "$1" == "-f" ]]
+then
+    # use it for the commands
+    filename="$2"
+    shift
+    shift
+elif [[ ! -r $filename ]]
+then
+    # otherwise, look in the current directory for a '.choices' file and
+    # use that. if there isn't one here, look in parent directories until
+    # there are no more parent directories.
+    prefix=.
+    while true
+    do
+        absolute=$(cd $prefix || exit; pwd)
+
+        if [[ -r "$absolute/$filename" ]]
+        then
+            filename=$absolute/$filename
+            break
+        fi
+
+        if [[ "$absolute" = "/" ]]
+        then
+            echo "No $filename file found, exiting"
+            exit 1
+        fi
+
+        prefix=$prefix/..
+    done
+fi
+
+# if the user pre-supplied a number, use that.
+if [[ "$1" != "" ]]
+then
+    a=$1
+    shift
+    echo "$(sed -ne "$a,$a p" "$filename")" "$*"
+    eval "$(sed -ne "$a,$a p" "$filename")" "$*"
+    exit
+fi
+
+IFS=$'\n'
+
+# otherwise, give them a choice and remember it in their history.
+select CHOICE in $(cat "$filename")
+do
+    history -s "$CHOICE"
+    eval "$CHOICE" "$*"
+    break
+done
+

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Step 1: Generate RSA private key with AES-256-CBC encryption
+openssl genpkey -algorithm RSA -out private_key.pem -aes-256-cbc -pass pass:top_secret
+
+# Step 2: Convert RSA private key to DES-EDE3 format
+openssl rsa -in private_key.pem -out private_key_des.pem -des3 -passin pass:top_secret -passout pass:top_secret
+
+# Step 3: Read the converted key and format as JSON
+private_key=$(cat private_key_des.pem | sed 's/$/\\n/' | tr -d '\n')
+
+# Create JSON structure
+jq -n --arg key "$private_key" '{ "signingKey": $key }'
