@@ -1,0 +1,21 @@
+#
+# .gitignore
+#
+
+.DS_Store
+zsh-snap/
+cache/*
+tmux/
+.zcompdump*
+.zsh_history
+*.zwc
+prefs
+*.p12
+zinit
+bin/tree
+dots.com
+.zsh_sessions/
+man
+.env
+.envrc
+
