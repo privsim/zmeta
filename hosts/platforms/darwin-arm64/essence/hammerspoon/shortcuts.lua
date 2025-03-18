@@ -3,10 +3,11 @@ local shortcuts = {}
 
 -- Configuration
 local config = {
-    windowWidth = 600,
-    windowHeight = 800,
-    fontSize = 14,
-    padding = 20,
+    windowWidth = 1000,  -- Wider to match KSheet style
+    windowHeight = 700,
+    fontSize = 13,
+    padding = 10,
+    lineHeight = 16,
     categories = {
         ["Window Management"] = {
             ["Screen Movement"] = {},
@@ -45,13 +46,20 @@ local function formatModifiers(mods)
     return table.concat(formatted, "")
 end
 
+-- Function to format hotkey text in KSheet style
+local function formatHotkeyText(mods, key, description)
+    local modText = formatModifiers(mods)
+    -- Pad the key combination to align descriptions
+    local keyCombo = string.format("%-12s", modText .. key)
+    return keyCombo .. " → " .. description
+end
+
 -- Function to categorize hotkeys
 local function categorizeHotkey(hotkey)
     local msg = hotkey.msg or ""
     local key = hotkey.key and hotkey.key:upper() or ""
-    local mods = formatModifiers(hotkey.mods)
     local description = msg ~= "" and msg or "No description"
-    local hotkeyText = string.format("%s%s - %s", mods, key, description)
+    local hotkeyText = formatHotkeyText(hotkey.mods, key, description)
 
     -- Categorize based on key words and patterns
     if msg:lower():find("screen") or msg:lower():find("move.*screen") then
@@ -96,11 +104,11 @@ local function createShortcutsWindow()
     shortcuts.window:level(hs.canvas.windowLevels.modalPanel)
     shortcuts.window:behavior(hs.canvas.windowBehaviors.canJoinAllSpaces)
 
-    -- Create the background
+    -- Create the background (KSheet style)
     shortcuts.window:appendElements({
         type = "rectangle",
         action = "fill",
-        fillColor = { white = 0, alpha = 0.95 },
+        fillColor = { white = 0, alpha = 0.85 },
         frame = { x = 0, y = 0, w = "100%", h = "100%" }
     })
 
@@ -127,59 +135,70 @@ local function createShortcutsWindow()
         end
     end
 
-    -- Create the text content
-    local textContent = "Hammerspoon Shortcuts\n\n"
-    local yOffset = config.padding
+    -- Create the text content in KSheet style
+    local textContent = ""
+    local lineCount = 0
 
+    -- Helper function to add a line with proper spacing
+    local function addLine(line)
+        textContent = textContent .. line .. "\n"
+        lineCount = lineCount + 1
+    end
+
+    -- Add categories in KSheet style
     for category, content in pairs(categorizedHotkeys) do
-        textContent = textContent .. category .. "\n"
-        textContent = textContent .. string.rep("-", #category) .. "\n\n"
+        -- Add empty line before category (except first)
+        if lineCount > 0 then
+            addLine("")
+        end
 
-        if type(content) == "table" and next(content) then
+        -- Add category header
+        addLine(category .. ":")
+
+        if type(content) == "table" then
+            -- Handle subcategories
             for subcategory, hotkeys in pairs(content) do
                 if type(hotkeys) == "table" and #hotkeys > 0 then
-                    textContent = textContent .. "  " .. subcategory .. ":\n"
+                    addLine("  " .. subcategory)
                     for _, hotkey in ipairs(hotkeys) do
-                        textContent = textContent .. "    " .. hotkey .. "\n"
+                        addLine("    " .. hotkey)
                     end
-                    textContent = textContent .. "\n"
+                end
+            end
+
+            -- Handle direct hotkeys in category
+            for _, hotkey in ipairs(content) do
+                if type(hotkey) == "string" then
+                    addLine("  " .. hotkey)
                 end
             end
         end
     end
 
-    -- Add the text element
+    -- Add the text element (KSheet style)
     shortcuts.window:appendElements({
         type = "text",
         text = textContent,
         textColor = { white = 1.0 },
+        textFont = "Menlo",  -- Use monospace font like KSheet
         textSize = config.fontSize,
         frame = { x = config.padding, y = config.padding, w = config.windowWidth - 2 * config.padding, h = config.windowHeight - 2 * config.padding }
     })
 
-    -- Add close button
+    -- Add ESC to close hint
+    local escHint = "Press ESC to exit"
     shortcuts.window:appendElements({
-        type = "rectangle",
-        action = "fill",
-        fillColor = { red = 0.8, green = 0.2, blue = 0.2, alpha = 1.0 },
-        frame = { x = config.windowWidth - 40, y = 10, w = 30, h = 30 }
-    }, {
         type = "text",
-        text = "×",
-        textColor = { white = 1.0 },
-        textSize = 20,
-        frame = { x = config.windowWidth - 40, y = 10, w = 30, h = 30 }
+        text = escHint,
+        textColor = { white = 0.5 },  -- Dimmed text like KSheet
+        textSize = 12,
+        frame = {
+            x = config.windowWidth - 120,
+            y = config.windowHeight - 30,
+            w = 110,
+            h = 20
+        }
     })
-
-    -- Add mouse callback for close button
-    shortcuts.window:mouseCallback(function(canvas, message, point)
-        if message == "mouseDown" then
-            if point.x >= config.windowWidth - 40 and point.x <= config.windowWidth - 10 and
-               point.y >= 10 and point.y <= 40 then
-                shortcuts.hide()
-            end
-        end
-    end)
 end
 
 -- Function to show shortcuts
@@ -188,12 +207,28 @@ function shortcuts.show()
         createShortcutsWindow()
     end
     shortcuts.window:show()
+
+    -- Add ESC key binding
+    if not shortcuts.escapeWatcher then
+        shortcuts.escapeWatcher = hs.eventtap.new({hs.eventtap.event.types.keyDown}, function(event)
+            local keycode = event:getKeyCode()
+            if keycode == hs.keycodes.map.escape then
+                shortcuts.hide()
+                return true
+            end
+            return false
+        end)
+    end
+    shortcuts.escapeWatcher:start()
 end
 
 -- Function to hide shortcuts
 function shortcuts.hide()
     if shortcuts.window then
         shortcuts.window:hide()
+    end
+    if shortcuts.escapeWatcher then
+        shortcuts.escapeWatcher:stop()
     end
 end
 
