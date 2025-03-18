@@ -1,6 +1,7 @@
 -- Define hyper keys
 launchMash = {"⌘", "⌥", "⌃"}
 windowMash = {"⌘", "⌥"}
+screenMash = {"⌃", "⌥"}
 
 print("Initializing Hammerspoon configuration")
 
@@ -95,10 +96,10 @@ local function moveWindowToScreen(direction)
 end
 
 -- Hotkey bindings for moving windows between screens
-hs.hotkey.bind(windowMash, "h", function() moveWindowToScreen("left") end)
-hs.hotkey.bind(windowMash, "l", function() moveWindowToScreen("right") end)
-hs.hotkey.bind(windowMash, "k", function() moveWindowToScreen("up") end)
-hs.hotkey.bind(windowMash, "j", function() moveWindowToScreen("down") end)
+hs.hotkey.bind(screenMash, "h", function() moveWindowToScreen("left") end)
+hs.hotkey.bind(screenMash, "l", function() moveWindowToScreen("right") end)
+hs.hotkey.bind(screenMash, "k", function() moveWindowToScreen("up") end)
+hs.hotkey.bind(screenMash, "j", function() moveWindowToScreen("down") end)
 
 -- Reload Hammerspoon configuration
 hs.hotkey.bind(launchMash, "r", function() hs.reload() end)
