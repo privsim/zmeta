@@ -82,10 +82,10 @@ local function cycleWindowSize(direction)
 end
 
 -- Window movement hotkeys with cycling sizes
-hs.hotkey.bind(windowMash, "left", function() cycleWindowSize("left") end)
-hs.hotkey.bind(windowMash, "right", function() cycleWindowSize("right") end)
-hs.hotkey.bind(windowMash, "up", function() cycleWindowSize("up") end)
-hs.hotkey.bind(windowMash, "down", function() cycleWindowSize("down") end)
+hs.hotkey.bind(windowMash, "1", function() cycleWindowSize("left") end)
+hs.hotkey.bind(windowMash, "2", function() cycleWindowSize("right") end)
+hs.hotkey.bind(windowMash, "3", function() cycleWindowSize("up") end)
+hs.hotkey.bind(windowMash, "4", function() cycleWindowSize("down") end)
 
 -- Window resizing hotkeys
 hs.hotkey.bind(windowMash, "i", function() hs.grid.resizeWindowShorter() end)
@@ -94,9 +94,9 @@ hs.hotkey.bind(windowMash, "j", function() hs.grid.resizeWindowThinner() end)
 hs.hotkey.bind(windowMash, "l", function() hs.grid.resizeWindowWider() end)
 
 -- Grid size hotkeys
-hs.hotkey.bind(windowMash, "2", function() hs.grid.setGrid('2x2'); hs.alert.show('Grid set to 2x2'); end)
-hs.hotkey.bind(windowMash, "3", function() hs.grid.setGrid('3x3'); hs.alert.show('Grid set to 3x3'); end)
-hs.hotkey.bind(windowMash, "4", function() hs.grid.setGrid('4x4'); hs.alert.show('Grid set to 4x4'); end)
+hs.hotkey.bind(windowMash, "5", function() hs.grid.setGrid('2x2'); hs.alert.show('Grid set to 2x2'); end)
+hs.hotkey.bind(windowMash, "6", function() hs.grid.setGrid('3x3'); hs.alert.show('Grid set to 3x3'); end)
+hs.hotkey.bind(windowMash, "7", function() hs.grid.setGrid('4x4'); hs.alert.show('Grid set to 4x4'); end)
 
 -- Move window to next screen
 hs.hotkey.bind(windowMash, "/", function()

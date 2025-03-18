@@ -46,7 +46,11 @@ hs.loadSpoon("KSheet")
 spoon.KSheet:bindHotkeys({
     toggle = {{"ctrl", "alt", "cmd"}, "/"}
 })
-print("Bound KSheet to ctrl + alt + cmd + /")
+
+-- Enhance KSheet with custom hotkeys display
+local hotkeys = require "hotkeys"
+hotkeys.enhanceKSheet()
+print("Enhanced KSheet with custom hotkeys display")
 
 -- Load ClipboardTool Spoon
 print("Loading ClipboardTool")
