@@ -52,6 +52,11 @@ local hotkeys = require "hotkeys"
 hotkeys.enhanceKSheet()
 print("Enhanced KSheet with custom hotkeys display")
 
+-- Load dedicated shortcuts display
+local shortcuts = require "shortcuts"
+hs.hotkey.bind({"ctrl", "alt", "cmd"}, "h", function() shortcuts.toggle() end)
+print("Loaded dedicated shortcuts display (Ctrl + Alt + Cmd + H)")
+
 -- Load ClipboardTool Spoon
 print("Loading ClipboardTool")
 hs.loadSpoon("ClipboardTool")

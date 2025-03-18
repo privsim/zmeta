@@ -24,31 +24,52 @@ The hyper keys are defined as `⌘ + ⌥ + ⌃` (control + option + command) and
 
 ## Window Management
 
-| Key         | Action                                      |
-| ----------- | ------------------------------------------- |
-| ←           | Move window left (cycle sizes)              |
-| →           | Move window right (cycle sizes)             |
-| ↑           | Move window up (cycle sizes)                |
-| ↓           | Move window down (cycle sizes)              |
-| I           | Decrease height                             |
-| K           | Increase height                             |
-| J           | Decrease width                              |
-| L           | Increase width                              |
-| H           | Move window to screen on the left           |
-| L           | Move window to screen on the right          |
-| K           | Move window to screen above                 |
-| J           | Move window to screen below                 |
-| 2           | Set 2x2 grid                                |
-| 3           | Set 3x3 grid                                |
-| 4           | Set 4x4 grid                                |
-| /           | Move window to next screen                  |
-| ,           | Snap window to grid                         |
-| (space)     | Maximize window                             |
-| .           | Minimize window                             |
-| ⌘ + Enter   | Toggle maximize window                      |
-| ⌘ + ⌥ + Tab | Cycle through windows of the same app       |
-| ⌘ + ⌥ + /   | Move window to the next workspace           |
-| ⌘ + ⌥ + shift + / | Move window to the previous workspace |
+### Window Movement Between Screens
+| Key | Action                    |
+| --- | ------------------------- |
+| H   | Move window to left screen |
+| L   | Move window to right screen|
+| K   | Move window to upper screen|
+| J   | Move window to lower screen|
+
+### Window Resizing and Grid
+| Key | Action                    |
+| --- | ------------------------- |
+| 1   | Cycle size left          |
+| 2   | Cycle size right         |
+| 3   | Cycle size up            |
+| 4   | Cycle size down          |
+| I   | Decrease height          |
+| K   | Increase height          |
+| J   | Decrease width           |
+| L   | Increase width           |
+| 5   | Set 2x2 grid            |
+| 6   | Set 3x3 grid            |
+| 7   | Set 4x4 grid            |
+| /   | Move window to next screen|
+| ,   | Snap window to grid      |
+| (space) | Maximize window    |
+| .   | Minimize window          |
+| ⌘ + Enter | Toggle maximize window |
+
+### Window Cycling and Workspace
+| Key | Action                              |
+| --- | ----------------------------------- |
+| ⌘ + ⌥ + Tab | Cycle through windows of same app |
+| ⌘ + ⌥ + /   | Move window to next workspace     |
+| ⌘ + ⌥ + ⇧ + / | Move window to previous workspace |
+
+## Desktop Canvas
+| Key | Action                    |
+| --- | ------------------------- |
+| D   | Toggle drawing mode       |
+| T   | Add text note            |
+| C   | Clear canvas             |
+| S   | Save canvas              |
+| 1   | Set color to black       |
+| 2   | Set color to red         |
+| 3   | Set color to blue        |
+| 4   | Set color to green       |
 
 ## Media Controls
 
@@ -64,3 +85,16 @@ The hyper keys are defined as `⌘ + ⌥ + ⌃` (control + option + command) and
 | Key | Action                              |
 | --- | ----------------------------------- |
 | V   | Show clipboard history and paste    |
+
+## Shortcuts Display
+
+There are two ways to view all available shortcuts:
+
+1. **KSheet Display** (`⌃ + ⌥ + ⌘ + /`)
+   - Shows all system-wide shortcuts
+   - Includes Hammerspoon shortcuts in a separate panel
+
+2. **Hammerspoon Shortcuts** (`⌃ + ⌥ + ⌘ + H`)
+   - Dedicated display for Hammerspoon shortcuts
+   - Organized by category
+   - Shows all custom hotkeys and their descriptions
