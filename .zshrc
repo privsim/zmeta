@@ -224,7 +224,7 @@ export LS_COLORS="$(vivid generate snazzy)"
 
 #=== CUSTOM CONFIGURATIONS ============================
 # If we gotta duck, let's get it out of the way first thing
-[ -f "$ZMETA/ascii/ducky.txt" ] && fastfetch --logo-type file -l "/Users/lclose/.zmeta/ascii/ducky.txt" --structure logo --logo-color-1 "2"
+[ -f "$ZMETA/ascii/ducky.txt" ] && fastfetch --logo-type file -l "~/.zmeta/ascii/ducky.txt" --structure logo --logo-color-1 "2"
 [ -f "$ZMETA/aliases.zsh" ] && source "$ZMETA/aliases.zsh"
 [ -f "$ZMETA/aliases-$(uname).zsh" ] && source "$ZMETA/aliases-$(uname).zsh"
 [ -f "$ZMETA/functions/p" ] && source "$ZMETA/functions/p"
