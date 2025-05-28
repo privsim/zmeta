@@ -10,18 +10,12 @@ alias hashpass='python ~/.zmeta/bin/argon2_hashgen.py'
 alias 32AN="openssl rand -base64 32 | tr -dc 'a-zA-Z0-9&*()' | head -c 32 | pbcopy"
 alias gac='git add -A; git commit'
 
-
 # mask built-ins with better defaults
 alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -i'
 alias ping='ping -c 5'
 alias vi=vim
-
-# more ways to ls
-#alias ll='ls -lh'
-#alias la='ls -lAh'
-#alias ldot='ls -ld .*'
 
 # fast
 alias ..='cd ..'
@@ -118,7 +112,6 @@ alias ct='cht.sh --shell'
 alias y='cht.sh '
 alias wth='sudo dmesg'
 alias python='python3'
-alias m='mdcat'
 alias fast='speedtest'
 
 alias code2prompt='code2prompt --tokens '

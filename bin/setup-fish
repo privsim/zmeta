@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+# Script to set up fish shell from zmeta dotfiles
+
+# Define source and destination paths
+ZMETA_DIR="$HOME/.zmeta"
+FISH_CONFIG_DIR="$HOME/.config/fish"
+
+# ANSI color codes
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[0;33m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+
+# Helper functions
+info() {
+    echo -e "${BLUE}[INFO]${NC}: ${CYAN}$1${NC}"
+}
+
+error() {
+    echo -e "${RED}[ERROR]${NC}: ${YELLOW}$1${NC}"
+    return 1
+}
+
+# Check if fish is installed
+if ! command -v fish &> /dev/null; then
+    error "Fish shell is not installed. Please install it first."
+    if [[ "$(uname)" == "Darwin" ]]; then
+        echo "You can install fish on macOS with: brew install fish"
+    elif command -v apt &> /dev/null; then
+        echo "You can install fish on Debian/Ubuntu with: sudo apt install fish"
+    elif command -v pacman &> /dev/null; then
+        echo "You can install fish on Arch with: sudo pacman -S fish"
+    elif command -v dnf &> /dev/null; then
+        echo "You can install fish on Fedora with: sudo dnf install fish"
+    fi
+    exit 1
+fi
+
+# Make fish install script executable
+chmod +x "$ZMETA_DIR/fish/install.fish"
+
+# Check if we should run the full setup
+if [[ "$1" == "--full" ]]; then
+    # Run the fish installer script
+    info "Running fish installer script..."
+    fish "$ZMETA_DIR/fish/install.fish"
+else
+    # Run a minimal setup that just links the config files
+    info "Setting up fish configuration from zmeta..."
+    
+    # Create destination directory if it doesn't exist
+    mkdir -p "$FISH_CONFIG_DIR/conf.d" "$FISH_CONFIG_DIR/functions" "$FISH_CONFIG_DIR/completions"
+    
+    # Link main config file
+    info "Linking config.fish"
+    ln -sf "$ZMETA_DIR/fish/config.fish" "$FISH_CONFIG_DIR/config.fish"
+    
+    # Link configuration directories
+    info "Linking configuration directories"
+    
+    # Link conf.d files
+    for file in "$ZMETA_DIR/fish/conf.d/"*.fish; do
+        if [[ -f "$file" ]]; then
+            filename=$(basename "$file")
+            ln -sf "$file" "$FISH_CONFIG_DIR/conf.d/$filename"
+            info "- Linked $filename"
+        fi
+    done
+    
+    # Link function files
+    for file in "$ZMETA_DIR/fish/functions/"*.fish; do
+        if [[ -f "$file" ]]; then
+            filename=$(basename "$file")
+            ln -sf "$file" "$FISH_CONFIG_DIR/functions/$filename"
+            info "- Linked $filename"
+        fi
+    done
+    
+    # Link completion files if any
+    for file in "$ZMETA_DIR/fish/completions/"*.fish; do
+        if [[ -f "$file" ]]; then
+            filename=$(basename "$file")
+            ln -sf "$file" "$FISH_CONFIG_DIR/completions/$filename"
+            info "- Linked $filename"
+        fi
+    done
+fi
+
+info "Fish shell configuration has been set up from zmeta."
+info "To use fish as your default shell, run: chsh -s $(which fish)"
+info "For full plugin installation, run: fish -c 'source $ZMETA_DIR/fish/conf.d/plugins.fish'"
+info "To test without changing default shell, simply run: fish"

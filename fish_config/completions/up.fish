@@ -1,0 +1,1 @@
+complete -c up -f -a "(seq 10)" -d "Move up n directories"

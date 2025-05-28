@@ -92,3 +92,7 @@ source <(kubectl completion zsh | sed 's/kubectl/k/g')
 echo 'name of commaand to generate completion';read COMMAND; $COMMAND completion zsh > ~/.local/share/zsh/zinit/completions/_$COMMAND;exec zsh
 
 echo 'email address of keys fingerprint: ';read IDENT;gpg --list-secret-keys --keyid-format long $IDENT | grep "Key fingerprint" | cut -d= -f2 | tr -d ' '
+
+zi update --all
+
+zinit csearch

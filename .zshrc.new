@@ -40,10 +40,6 @@ else
   error "Unable to find 'zinit.zsh'" && return 1
 fi
 
-#=== ZUI / CRASIS ====================================
-zi light zdharma-continuum/zui
-zi light zdharma-continuum/zinit-crasis
-
 #=== HOSTS HANDLING =========================================
 if [[ -n "$ZMETA_PLATFORM" && "$ZMETA_PLATFORM" == "darwin-arm64" ]]; then
     # Load immediate configurations
@@ -70,13 +66,13 @@ if [[ -n "$ZMETA_PLATFORM" && "$ZMETA_PLATFORM" == "darwin-arm64" ]]; then
                 chmod 700 \$XDG_RUNTIME_DIR
 
                 # Only sync if essence directory exists and has contents
-#                [[ -d \$ZMETA_ESSENCE_DIR ]] && [[ -n \"\$(ls -A \$ZMETA_ESSENCE_DIR)\" ]] && {
-#                    rsync -av --backup \
-#                          --exclude \'.git/\' \
-#                          --exclude \'*.bak\' \
-#                          --exclude \'*.old\' \
-#                          \$ZMETA_ESSENCE_DIR/ \$XDG_CONFIG_HOME/
-#                }
+                [[ -d \$ZMETA_ESSENCE_DIR ]] && [[ -n \"\$(ls -A \$ZMETA_ESSENCE_DIR)\" ]] && {
+                    rsync -av --backup \
+                          --exclude \'.git/\' \
+                          --exclude \'*.bak\' \
+                          --exclude \'*.old\' \
+                          \$ZMETA_ESSENCE_DIR/ \$XDG_CONFIG_HOME/
+                }
             "
         zinit load zdharma-continuum/null
     fi
@@ -162,6 +158,7 @@ zi from'gh-r' lbin'!' nocompile for \
   @sharkdp/fd          @sharkdp/hyperfine  \
   @sharkdp/bat         @sharkdp/vivid      \
   @sharkdp/hexyl       @sharkdp/pastel     \
+  @alexellis/arkade    @helix-editor/helix \
   @ClementTsang/bottom @aquaproj/aqua      \
   @bonnefoa/kubectl-fzf \
   lbin'!* -> jq'       @jqlang/jq          \
@@ -170,27 +167,9 @@ zi from'gh-r' lbin'!' nocompile for \
   lbin'!**/rg'         @BurntSushi/ripgrep \
   lbin'!* -> uv'       @astral-sh/uv       
 
-# Helix - handle nested subdir
-zi ice from'gh-r' as'program' lbin'helix-*/hx -> hx' nocompile
-zi load helix-editor/helix
-
-# Arkade - handle arch naming
-zi ice from'gh-r' as'program' lbin'arkade* -> arkade' nocompile
-zi load alexellis/arkade
-
-# Eza - renamed binary per platform
-zi ice from'gh-r' as'program' lbin'eza* -> eza' nocompile
-zi load eza-community/eza
-
 zi as'command' light-mode for \
   pick'revolver' @molovo/revolver \
   pick'zunit' atclone'./build.zsh' @zunit-zsh/zunit
-
-#=== DIRENV ==========================================
-zi ice from'gh-r' as'program' mv'direnv* -> direnv' \
-  atclone'./direnv hook zsh > zhook.zsh' \
-  atpull'%atclone' pick'direnv' src'zhook.zsh'
-zi load direnv/direnv
 
 #=== COMPILED PROGRAMS ================================
 zi lucid make'PREFIX=$PWD install' nocompile for \
@@ -239,14 +218,15 @@ export LS_COLORS="$(vivid generate snazzy)"
 
 #=== CUSTOM CONFIGURATIONS ============================
 # If we gotta duck, let's get it out of the way first thing
-[ -f "$ZMETA/ascii/ducky.txt" ] && fastfetch --logo-type file -l "~/.zmeta/ascii/ducky.txt" --structure logo --logo-color-1 "2"
+[ -f "$ZMETA/ascii/ducky.txt" ] && fastfetch --logo-type file -l "/Users/lclose/.zmeta/ascii/ducky.txt" --structure logo --logo-color-1 "2"
 [ -f "$ZMETA/aliases.zsh" ] && source "$ZMETA/aliases.zsh"
 [ -f "$ZMETA/aliases-$(uname).zsh" ] && source "$ZMETA/aliases-$(uname).zsh"
 [ -f "$ZMETA/functions/p" ] && source "$ZMETA/functions/p"
 [ -f "$ZMETA/functions/various" ] && source "$ZMETA/functions/various"
+[ -f "$ZMETA/functions/shell_switchers" ] && source "$ZMETA/functions/shell_switchers"
 
 # Initialize direnv
-eval "$(direnv hook zsh)"
+#eval "$(direnv hook zsh)"
 
 # NVM Configuration
 export NVM_DIR="$HOME/.config/nvm"
@@ -260,6 +240,3 @@ fpath=(/Users/lclose/.docker/completions $fpath)
 autoload -Uz compinit
 compinit
 # End of Docker CLI completions
-export PATH="/Applications/calibre.app/Contents/MacOS:$PATH"
-
-#eval "$(uv generate-shell-completion zsh)"

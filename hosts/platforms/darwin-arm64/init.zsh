@@ -27,7 +27,7 @@ fi
 path=(
     $HOME/{,s}bin(N)
     $HOME/.local/{,s}bin(N)
-	$HOME/{.arkade,.zmeta,.cargo,.docker}/bin(N)
+    $HOME/{.arkade,.zmeta,.cargo,.docker}/bin(N)
     /opt/{homebrew,local}/{,s}bin(N)
     /usr/local/{,s}bin(N)
     $path
@@ -36,14 +36,14 @@ path=(
 # Define platform-specific configurations for later zinit loading
 typeset -gA DARWIN_ARM64_CONFIGS
 DARWIN_ARM64_CONFIGS=(
-    compiler_flags "
-        export CFLAGS='-O2 -pipe -march=armv8-a+crypto -mtune=native'
-        export CXXFLAGS=\${CFLAGS}
-        export MAKEFLAGS='-j$(sysctl -n hw.ncpu)'
-        export LDFLAGS='-L/opt/homebrew/opt/openssl@3/lib'
-        export CPPFLAGS='-I/opt/homebrew/opt/openssl@3/include'
-        export ARCHFLAGS='-arch arm64'
-    "
+#    compiler_flags "
+#        export CFLAGS='-O2 -pipe -march=armv8-a+crypto -mtune=native'
+#        export CXXFLAGS=\${CFLAGS}
+#        export MAKEFLAGS='-j$(sysctl -n hw.ncpu)'
+#        export LDFLAGS='-L/opt/homebrew/opt/openssl@3/lib'
+#        export CPPFLAGS='-I/opt/homebrew/opt/openssl@3/include'
+#        export ARCHFLAGS='-arch arm64'
+#    "
     brew_settings "
         export HOMEBREW_NO_ANALYTICS=1
         export HOMEBREW_NO_ENV_HINTS=1

@@ -52,13 +52,13 @@ def extract_perplexity_content(page):
         print("Bypassing initial checks...")
         page.wait_for_load_state('networkidle', timeout=60000)
         page.wait_for_load_state('domcontentloaded')
-        
+
         selectors = [
             'div[class*="w-full text-token-text-primary"]',
             'div[class*="whitespace-pre-wrap break-words"]',
             'div[class*="flex flex-col gap"]'
         ]
-        
+
         content = []
         for selector in selectors:
             try:
@@ -70,20 +70,20 @@ def extract_perplexity_content(page):
             except Exception as e:
                 print(f"Selector {selector} failed: {e}")
                 continue
-        
+
         if not content:
             print("No content found with primary selectors, trying backup method...")
             page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
             time.sleep(2)
-            
+
             elements = page.evaluate("""() => {
                 return Array.from(document.querySelectorAll('div'))
                     .filter(el => el.textContent.length > 100)
                     .map(el => el.textContent);
             }""")
-            
+
             content = [text for text in elements if text.strip()]
-        
+
         return '\n\n'.join(content)
     except Exception as e:
         print(f"Error in extract_perplexity_content: {e}")
@@ -100,37 +100,37 @@ def fetch_conversation_text(shared_url, output_file):
         browser = p.chromium.launch(
             headless=True,
         )
-        
+
         context = browser.new_context(
             viewport={'width': 1920, 'height': 1080},
             user_agent='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         )
-        
+
         page = context.new_page()
         page.set_default_timeout(60000)
-        
+
         try:
             print("Navigating to page...")
             page.goto(shared_url, wait_until='commit')
-            
+
             if 'perplexity.ai' in shared_url:
                 print("Detected Perplexity.ai URL")
                 conversation_text = extract_perplexity_content(page)
-            elif 'openai.com' in shared_url:
-                print("Detected OpenAI URL")
+            elif 'openai.com' in shared_url or 'chatgpt.com' in shared_url:
+                print("Detected OpenAI/ChatGPT URL")
                 conversation_text = extract_openai_content(page)
             else:
-                raise ValueError("Unsupported URL type")
-            
+                raise ValueError(f"Unsupported URL type: {shared_url}")
+
             if not conversation_text.strip():
                 raise ValueError("No content extracted")
 
             print("Writing output file...")
             with open(output_file, 'w', encoding='utf-8') as output:
                 output.write(conversation_text)
-                
+
             print(f"Successfully saved conversation to: {output_file}")
-            
+
         except Exception as e:
             print(f"Error: {e}")
             print("Attempting to save page source for debugging...")

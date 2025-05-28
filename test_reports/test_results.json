@@ -1,0 +1,19 @@
+{
+  "framework": "generic",
+  "tests": [
+    {
+      "name": "Output Block 1",
+      "passed": true,
+      "output": [
+        ""
+      ],
+      "rawOutput": ""
+    }
+  ],
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  },
+  "rawOutput": ""
+}
