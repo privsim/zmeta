@@ -88,14 +88,14 @@ alias pyva="source .venv/bin/activate"
 # misc
 alias ee='exit'
 alias qq='reset'
-alias tt="exa -bghHliSS"
+alias tt="eza -bghHliSS"
 alias history="history 0"
 alias ll='lsd -ltr'
 alias la='lsd -la'
 alias l='lsd -lS'
 alias mv='mv -i'
 alias cp='cp -i'
-alias q='exa -a -l --sort=modified'
+alias q='eza -a -l --sort=modified'
 alias listening='sudo netstat -anp tcp | grep "LISTEN"'
 alias psg='ps aux | grep -v grep | grep -i'
 alias nsl='netstat -taupn | grep LISTEN'

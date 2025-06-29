@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Simple script to manage fish shell configuration
+
+case "$1" in
+    install)
+        ~/.zmeta/shells/fish/install.sh
+        ;;
+    config)
+        vim ~/.zmeta/shells/fish/config/config.fish
+        ;;
+    aliases)
+        vim ~/.zmeta/shells/fish/config/conf.d/aliases.fish
+        ;;
+    test)
+        ~/.zmeta/shells/fish/tests/simple_test.sh
+        ;;
+    test-detailed)
+        ~/.zmeta/shells/fish/tests/run_tests.sh all
+        ;;
+    test-quick)
+        fish -c "echo 'Fish shell is working correctly'"
+        ;;
+    *)
+        echo "Usage: $0 {install|config|aliases|test|test-detailed|test-quick}"
+        echo ""
+        echo "Commands:"
+        echo "  install      - Install fish configuration"
+        echo "  config       - Edit main config file"
+        echo "  aliases      - Edit aliases file"
+        echo "  test         - Run comprehensive tests (recommended)"
+        echo "  test-detailed- Run detailed test suite (may hang)"
+        echo "  test-quick   - Quick test fish shell"
+        ;;
+esac
