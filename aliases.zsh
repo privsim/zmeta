@@ -114,7 +114,6 @@ alias wth='sudo dmesg'
 alias python='python3'
 alias fast='speedtest'
 
-alias code2prompt='code2prompt --tokens '
 alias veracrypt='/Applications/VeraCrypt.app/Contents/MacOS/VeraCrypt --text '
 
 alias cilium-ipsec='command openssl rand -hex 20 | xargs -I{} echo "3 rfc4106(gcm(aes)) {} 128" | pbcopy && echo "[Cilium IPsec key copied to clipboard]"'

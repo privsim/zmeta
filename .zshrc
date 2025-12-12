@@ -244,6 +244,7 @@ export LS_COLORS="$(vivid generate snazzy)"
 [ -f "$ZMETA/aliases-$(uname).zsh" ] && source "$ZMETA/aliases-$(uname).zsh"
 [ -f "$ZMETA/functions/p" ] && source "$ZMETA/functions/p"
 [ -f "$ZMETA/functions/various" ] && source "$ZMETA/functions/various"
+[ -f "$ZMETA/functions/repomix-helpers.zsh" ] && source "$ZMETA/functions/repomix-helpers.zsh"
 
 # Initialize direnv
 eval "$(direnv hook zsh)"
@@ -257,9 +258,19 @@ export NVM_DIR="$HOME/.config/nvm"
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 # The following lines have been added by Docker Desktop to enable Docker CLI completions.
 fpath=(/Users/lclose/.docker/completions $fpath)
-autoload -Uz compinit
-compinit
+# autoload -Uz compinit  # Commented out - zinit handles this via zicompinit
+# compinit               # Commented out - zinit handles this via zicompinit
 # End of Docker CLI completions
 export PATH="/Applications/calibre.app/Contents/MacOS:$PATH"
 
 #eval "$(uv generate-shell-completion zsh)"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/lclose/.cache/lm-studio/bin"
+# End of LM Studio CLI section
+
+export PATH="$PATH:$HOME/.pub-cache/bin"
+export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+
+# bun completions
+[ -s "/Users/lclose/.bun/_bun" ] && source "/Users/lclose/.bun/_bun"

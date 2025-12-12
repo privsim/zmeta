@@ -1368,10 +1368,12 @@
             }
             animateNumber(totalSizeDisplay, parseFloat(totalSizeDisplay.textContent.replace(' KB','')) || 0, (totalSize / 1024).toFixed(2), ' KB');
             animateNumber(totalLinesDisplay, parseInt(totalLinesDisplay.textContent.replace(/,/g,''), 10) || 0, totalLines, '');
-            if ((totalSize / 1024) > 500) {
-                tallyWarning.textContent = "Warning: probably too large to fit in Claude 3.5 Sonnet context window!";
-            } else if ((totalSize / 1024) > 200) {
-                tallyWarning.textContent = "Warning: probably too large to fit in GPT-4o or o1 context window!";
+            if ((totalSize / 1024) > 1000) {
+                tallyWarning.textContent = "Warning: Very large selection - may exceed most AI model context windows!";
+            } else if ((totalSize / 1024) > 600) {
+                tallyWarning.textContent = "Warning: Large selection - may be near the limit for some AI models.";
+            } else if ((totalSize / 1024) > 300) {
+                tallyWarning.textContent = "Note: Moderate size - should work with most modern AI models.";
             } else {
                 tallyWarning.textContent = "";
             }
@@ -1425,16 +1427,6 @@
             });
             updateFolderCheckboxes();
         }
-
-        folderBtn.addEventListener('click', async () => {
-            try {
-                folderHandle = await window.showDirectoryPicker();
-                document.getElementById('folderWarning').classList.add('hidden');
-            } catch (err) {
-                console.error('Error selecting folder:', err);
-                document.getElementById('folderWarning').classList.remove('hidden');
-            }
-        });
 
         const fileTypePatterns = {
             js: [".js", ".mjs", ".cjs"],

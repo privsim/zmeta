@@ -1,0 +1,19 @@
+#!/usr/bin/env zsh
+# Launcher for Your Source to Prompt HTML application
+# Opens the HTML file in the default browser
+
+HTML_FILE="${0:a:h}/your-source-to-prompt.html"
+
+if [[ ! -f "$HTML_FILE" ]]; then
+    echo "Error: Could not find $HTML_FILE" >&2
+    exit 1
+fi
+
+# Open in default browser (works on macOS and Linux)
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    open "$HTML_FILE"
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    xdg-open "$HTML_FILE" 2>/dev/null || sensible-browser "$HTML_FILE" 2>/dev/null || echo "Please open $HTML_FILE in your browser manually"
+else
+    echo "Please open $HTML_FILE in your browser manually"
+fi

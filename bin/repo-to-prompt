@@ -1,0 +1,25 @@
+#!/usr/bin/env zsh
+# Quick launcher for Repomix - converts repo to AI prompt
+# Auto-respects .gitignore, counts tokens, and copies to clipboard
+
+# Check if we're in a directory argument or use current dir
+TARGET_DIR="${1:-.}"
+
+if [[ ! -d "$TARGET_DIR" ]]; then
+    echo "Error: $TARGET_DIR is not a directory" >&2
+    exit 1
+fi
+
+cd "$TARGET_DIR" || exit 1
+
+# Check if repomix is installed
+if ! command -v repomix &> /dev/null; then
+    echo "Repomix not found. Installing via npx..."
+    npx repomix@latest --copy
+else
+    # Run repomix with clipboard copy
+    repomix --copy
+fi
+
+echo "\n✅ Repository packed and copied to clipboard!"
+echo "📊 Check the output above for token counts and file list"
