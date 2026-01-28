@@ -67,8 +67,8 @@ p () {
 
   # case is like a mnemonic for sort order:
   # lower-case for standard, upper-case for descending
-  local S_ORD="o" R_ORD="O" SPEC="n"  # default: by name
-
+  # PREVIOUSlocal S_ORD="o" R_ORD="O" SPEC="n"  # default: by name
+  local S_ORD="O" R_ORD="o" SPEC="m"  # default: by mtime, oldest first (newest at bottom)
   # translate ls options to glob-qualifiers,
   # ignoring "--sort" prefix of long-args form
   case ${o_sort:#--sort} in
