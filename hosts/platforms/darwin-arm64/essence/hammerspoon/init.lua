@@ -58,6 +58,11 @@ local shortcuts = require "shortcuts"
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "h", function() shortcuts.toggle() end)
 print("Loaded dedicated shortcuts display (Ctrl + Alt + Cmd + H)")
 
+-- Load tasks viewer
+local tasks = require "tasks"
+hs.hotkey.bind({"ctrl", "alt", "cmd"}, "t", function() tasks.toggle() end)
+print("Loaded tasks viewer (Ctrl + Alt + Cmd + T)")
+
 -- Load ClipboardTool Spoon
 print("Loading ClipboardTool")
 hs.loadSpoon("ClipboardTool")
@@ -69,37 +74,10 @@ spoon.ClipboardTool.paste_on_select = true
 spoon.ClipboardTool:start()
 print("Bound ClipboardTool to ctrl + alt + cmd + V")
 
--- Function to move the current window to the next screen in a specific direction
-local function moveWindowToScreen(direction)
-    local win = hs.window.focusedWindow()
-    if not win then return end
-
-    local screen = win:screen()
-    local targetScreen
-
-    if direction == "left" then
-        targetScreen = screen:toWest()
-    elseif direction == "right" then
-        targetScreen = screen:toEast()
-    elseif direction == "up" then
-        targetScreen = screen:toNorth()
-    elseif direction == "down" then
-        targetScreen = screen:toSouth()
-    end
-
-    if targetScreen then
-        win:moveToScreen(targetScreen, true, true)  -- Move to the target screen, keeping window position relative to the screen
-        win:focus()
-    else
-        hs.alert.show("No screen available in that direction")
-    end
-end
-
--- Hotkey bindings for moving windows between screens
-hs.hotkey.bind(screenMash, "h", function() moveWindowToScreen("left") end)
-hs.hotkey.bind(screenMash, "l", function() moveWindowToScreen("right") end)
-hs.hotkey.bind(screenMash, "k", function() moveWindowToScreen("up") end)
-hs.hotkey.bind(screenMash, "j", function() moveWindowToScreen("down") end)
+-- Load screen navigation module (handles multi-monitor setups)
+local screenNav = require "screen_nav"
+screenNav.bindKeys(screenMash)
+print("Loaded screen navigation with ⌃⌥ + arrow keys")
 
 -- Reload Hammerspoon configuration
 hs.hotkey.bind(launchMash, "r", function() hs.reload() end)

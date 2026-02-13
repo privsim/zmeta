@@ -167,8 +167,8 @@ zi from'gh-r' lbin'!' nocompile for \
   lbin'!* -> jq'       @jqlang/jq          \
   lbin'!* -> shfmt'    @mvdan/sh           \
   lbin'!**/nvim'       @neovim/neovim      \
-  lbin'!**/rg'         @BurntSushi/ripgrep \
-  lbin'!* -> uv'       @astral-sh/uv       
+  lbin'!**/rg'         @BurntSushi/ripgrep
+
 
 # Helix - handle nested subdir
 zi ice from'gh-r' as'program' lbin'helix-*/hx -> hx' nocompile
@@ -263,7 +263,7 @@ fpath=(/Users/lclose/.docker/completions $fpath)
 # End of Docker CLI completions
 export PATH="/Applications/calibre.app/Contents/MacOS:$PATH"
 
-#eval "$(uv generate-shell-completion zsh)"
+eval "$(uv generate-shell-completion zsh)"
 
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/lclose/.cache/lm-studio/bin"
