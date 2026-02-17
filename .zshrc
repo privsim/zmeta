@@ -230,7 +230,8 @@ zi light-mode for \
 zi for atload'
     zicompinit; zicdreplay
     _zsh_highlight_bind_widgets
-    _zsh_autosuggest_bind_widgets' \
+    _zsh_autosuggest_bind_widgets
+    eval "$(uv generate-shell-completion zsh)"' \
   as'null' id-as'zinit/cleanup' lucid nocd wait \
   $ZI_REPO/null
 
@@ -262,8 +263,6 @@ fpath=(/Users/lclose/.docker/completions $fpath)
 # compinit               # Commented out - zinit handles this via zicompinit
 # End of Docker CLI completions
 export PATH="/Applications/calibre.app/Contents/MacOS:$PATH"
-
-eval "$(uv generate-shell-completion zsh)"
 
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/lclose/.cache/lm-studio/bin"

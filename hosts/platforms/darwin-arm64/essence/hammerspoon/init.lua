@@ -79,6 +79,17 @@ local screenNav = require "screen_nav"
 screenNav.bindKeys(screenMash)
 print("Loaded screen navigation with ⌃⌥ + arrow keys")
 
+-- Load ACTIVE.md viewer
+local active_view = require "active_view"
+hs.hotkey.bind(launchMash, ".", function() active_view.toggle() end)
+print("Loaded ACTIVE.md viewer (⌘⌥⌃ + .)")
+
+-- Load macro manager
+local macro_manager = require "macros"
+hs.hotkey.bind(launchMash, "m", function() macro_manager.showChooser() end)
+hs.hotkey.bind({"ctrl", "alt", "cmd", "shift"}, "m", function() macro_manager.toggle() end)
+print("Loaded macro manager (⌘⌥⌃+M chooser, ⌘⌥⌃⇧+M manager)")
+
 -- Reload Hammerspoon configuration
 hs.hotkey.bind(launchMash, "r", function() hs.reload() end)
 print("Bound hyper key + R to reload configuration")
